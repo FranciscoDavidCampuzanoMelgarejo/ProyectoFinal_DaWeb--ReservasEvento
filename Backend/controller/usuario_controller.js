@@ -12,7 +12,7 @@ export async function registrar(req, res, next) {
   let conexion;
 
   try {
-    conexion = await pool.getconexion();
+    conexion = await pool.getConnection();
 
     let resultadoQuery;
 
