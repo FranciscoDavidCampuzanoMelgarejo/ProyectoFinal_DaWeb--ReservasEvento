@@ -1,0 +1,36 @@
+/* Animaciones al entrar y salir */
+.autenticacion-appear-active,
+.autenticacion-enter-active {
+    animation: fadeInAndSlideDown 150ms ease-in-out 0s 1 normal forwards;
+}
+
+.autenticacion-exit-active {
+    animation: fadeOutAndSlideUp 150ms ease-in 0s 1 normal forwards;
+}
+
+
+@keyframes fadeInAndSlideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    75% {
+        opacity: 1;
+        transform: translateY(3px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutAndSlideUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
