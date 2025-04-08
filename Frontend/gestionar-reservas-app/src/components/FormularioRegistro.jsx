@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { InputField } from './InputField';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../Register.css';
 
 export function FormularioRegistro(){
+  const navigate = useNavigate();
   const[formData, setFormData]=useState({
     nombre:'',
     apellidos:'',
@@ -74,6 +76,7 @@ const handleSubmit = async (e) => {
 
     const data = await response.json();
     console.log('Registro exitoso:', data);
+    navigate('/login');
   }catch(error){
     console.error('Error en el registro',error);
   }

@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { InputField } from './InputField';
+import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import '../Login.css';
 export function FormularioLogin(){
+  const navigate = useNavigate();
   const[formData, setFormData]=useState({
     email:'',
     password:'', 
@@ -51,6 +53,7 @@ export function FormularioLogin(){
     
         const data = await response.json();
         console.log('Inicio de sesión exitoso:', data);
+        navigate('/bienvenida');
       }catch(error){
         console.error('Error en el inicio de sesión',error);
       }
