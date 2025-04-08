@@ -7,10 +7,10 @@ export function FormularioRegistro(){
   const[formData, setFormData]=useState({
     nombre:'',
     apellidos:'',
-    usuario:'',
+    nombreUsuario:'',
     email:'',
-    contraseña:'', 
-    confirmarContraseña:'',
+    password:'', 
+    confirmarPassword:'',
   });
 
 const[errors,setErrors]=useState({});
@@ -28,26 +28,54 @@ const validacion=()=>{
   if(!formData.apellidos || !expRegularNombre.test(formData.apellidos)){
     newErrors.apellidos='Ingresa un apellido valido(solo letras)'
   }
-  if(!formData.usuario){
-    newErrors.usuario='Ingresa un nombre de usuario'
+  if(!formData.nombreUsuario){
+    newErrors.nombreUsuario='Ingresa un nombre de usuario'
   }
   if(!formData.email || !expRegularCorreo.test(formData.email)){
     newErrors.email='Ingresa un correo valido'
   }
-  if(!formData.contraseña){
-    newErrors.contraseña='Ingresa una contraseña'
+  if(!formData.password){
+    newErrors.password='Ingresa una contraseña'
   }
-  if (formData.contraseña !== formData.confirmarContraseña) {
-    newErrors.confirmarContraseña = 'Las contraseñas no coinciden.';
+  if (formData.password !== formData.confirmarPassword) {
+    newErrors.confirmarPassword = 'Las contraseñas no coinciden.';
   }
+  console.log("Errores de validación:", newErrors);
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;
 };
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
-  if (validacion()) {
-    console.log('Formulario válido, enviar:', formData);
-    //enviar formulario aqui(nombre apellidos correo contraseña etc)
+  console.log("Intentando enviar el formulario...");
+  if (!validacion()) { return;}
+  //enviar formulario aqui(nombre apellidos correo contraseña etc)
+  const datosParaEnviar={
+    nombre:formData.nombre,
+    apellidos:formData.apellidos,
+    email:formData.email,
+    password:formData.password,
+    //nombreUsuario:formData.nombreUsuario,
+  };
+  try{//lo que contiene el try no se si está bien
+    const response = await fetch('http://localhost:3000/api/v1/user/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(datosParaEnviar),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Error al registrar:', error);
+      return;
+    }
+
+    const data = await response.json();
+    console.log('Registro exitoso:', data);
+  }catch(error){
+    console.error('Error en el registro',error);
   }
 };
 
@@ -59,10 +87,10 @@ const handleSubmit = (e) => {
             <div className="form-grid-custom">
               <InputField type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} error={errors.nombre} />
               <InputField type="text" name="apellidos" placeholder="Apellidos"  value={formData.apellidos} onChange={handleChange} error={errors.apellidos} />
-              <InputField type="text" name="usuario" placeholder="Nombre de usuario"  value={formData.usuario} onChange={handleChange} error={errors.usuario} />
+              <InputField type="text" name="nombreUsuario" placeholder="Nombre de usuario"  value={formData.nombreUsuario} onChange={handleChange} error={errors.nombreUsuario} />
               <InputField type="email" name="email" placeholder="Correo electrónico"  value={formData.email} onChange={handleChange} error={errors.email} />
-              <InputField type="password" name="contraseña" placeholder="Contraseña"  value={formData.contraseña} onChange={handleChange} error={errors.contraseña} />
-              <InputField type="password" name="confirmarContraseña" placeholder="Confirmar contraseña"  value={formData.confirmarContraseña} onChange={handleChange} error={errors.confirmarContraseña} />
+              <InputField type="password" name="password" placeholder="Contraseña"  value={formData.password} onChange={handleChange} error={errors.password} />
+              <InputField type="password" name="confirmarPassword" placeholder="Confirmar contraseña"  value={formData.confirmarPassword} onChange={handleChange} error={errors.confirmarPassword} />
             </div>
 
             <div className="d-flex justify-content-center">

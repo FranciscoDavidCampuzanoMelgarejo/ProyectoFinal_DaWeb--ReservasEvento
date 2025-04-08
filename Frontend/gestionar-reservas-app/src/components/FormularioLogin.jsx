@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import '../Login.css';
 export function FormularioLogin(){
   const[formData, setFormData]=useState({
-    usuario:'',
-    contraseña:'', 
+    email:'',
+    password:'', 
   });
   const[errors,setErrors]=useState({});
   const handleChange = (e) => {
@@ -14,20 +14,46 @@ export function FormularioLogin(){
   };
   const validar = () => {
     const newErrors = {};
-    if (!formData.usuario) {
-      newErrors.usuario = 'El nombre de usuario es obligatorio.';
+    if (!formData.email) {
+      newErrors.email = 'El correo electrónico es obligatorio.';
     }
-    if (!formData.contraseña) {
-      newErrors.contraseña = 'La contraseña es obligatoria.';
+    if (!formData.password) {
+      newErrors.password = 'La contraseña es obligatoria.';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validar()) {
       console.log('Formulario válido, enviar:', formData);
       //enviar formulario aqui(enviar datos al backend, recibirlos, comparar campos, etc)
+      const datosParaEnviar={
+        email:formData.email,
+        password:formData.password,
+        //nombreUsuario:formData.nombreUsuario,
+      };
+      try{//lo que contiene el try no se si está bien
+        const response = await fetch('http://localhost:3000/api/v1/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(datosParaEnviar),
+        });
+    
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Error al iniciar sesión:', error);
+          return;
+        }
+    
+        const data = await response.json();
+        console.log('Inicio de sesión exitoso:', data);
+      }catch(error){
+        console.error('Error en el inicio de sesión',error);
+      }
     }
   };
     return (
@@ -36,8 +62,8 @@ export function FormularioLogin(){
             <h2 className="text-center">Iniciar Sesión</h2>
             <form onSubmit={handleSubmit}>
             <div className="form-grid-login">
-              <InputField type="text" name="usuario" placeholder="Nombre de usuario" value={formData.usuario} onChange={handleChange} error={errors.usuario}/>
-              <InputField type="password" name="contraseña" placeholder="Contraseña" value={formData.contraseña} onChange={handleChange} error={errors.contraseña}/>
+              <InputField type="email" name="email" placeholder="Correo electrónico" value={formData.email} onChange={handleChange} error={errors.email}/>
+              <InputField type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} error={errors.password}/>
               </div>
               <div className="d-flex justify-content-center">
                 <button type="submit" className="btn btn-primary mt-3">Iniciar sesión</button>
