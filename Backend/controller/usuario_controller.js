@@ -120,7 +120,8 @@ export async function login(req, res, next) {
       throw new Error(`No se pudo generar el token: ${error.message}`);
     }
 
-    return res.status(StatusCodes.OK)
+    return res
+      .status(StatusCodes.OK)
       .cookie("access_token", tokenAcceso, {
         httpOnly: true,
         secure: false,
@@ -150,8 +151,51 @@ export async function login(req, res, next) {
 export function logout(req, res, next) {
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
-  return res.status(StatusCodes.OK)
-    .json({
-      mensaje: 'Cerrando sesion con exito'
-    });
+  return res.status(StatusCodes.OK).json({
+    mensaje: "Cerrando sesion con exito",
+  });
+}
+
+export async function refreshToken(req, res, next) {
+  const { id } = req.session.usuario;
+  let conexion;
+
+  try {
+    conexion = await pool.getConnection();
+
+    const [resultadoQuery] = await conexion.execute(
+      "SELECT nombre, rol FROM USUARIO WHERE id = ?",
+      [id]
+    );
+    if (!resultadoQuery.length) throw new NotFoundError("No existe el usuario");
+
+    const usuario = resultadoQuery[0];
+    let tokenAcceso;
+    try {
+      tokenAcceso = jwt.sign(
+        { id, nombre: usuario.nombre, rol: usuario.rol },
+        process.env.JWT_SECRETO,
+        {
+          expiresIn: "1h",
+        }
+      );
+    } catch (error) {
+      throw new Error(`No se pudo generar el token: ${error.message}`);
+    }
+
+    return res
+      .status(StatusCodes.OK)
+      .cookie("access_token", tokenAcceso, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 3600 * 1000,
+        sameSite: "strict",
+      })
+      .json({ok: true});
+  } catch (error) {
+    if (error instanceof CustomError) return next(error);
+    return next(new Error(`Error al refrescar el token de acceso`));
+  } finally {
+    if (conexion) conexion.release();
+  }
 }
