@@ -1,15 +1,81 @@
+import { useState } from 'react';
+import { InputField } from './InputField';
+import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-
-export function FormularioLogin() {
-
-    return(
-        <form id="formularioLogin" className="form-login p-5 border border-dark">
-            {/* PONER LOS CAMPOS DEL FORMULARIO */}
-            {/* PONER BOTON PARA INICIAR SESION */}
-            <div>
-                <span>¿Necesitas una cuenta?</span>
-                <Link to='/register'>Registrarse</Link>
-            </div>
-        </form>
-    );
+import '../Login.css';
+export function FormularioLogin(){
+  const navigate = useNavigate();
+  const[formData, setFormData]=useState({
+    email:'',
+    password:'', 
+  });
+  const[errors,setErrors]=useState({});
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: '' });
+  };
+  const validar = () => {
+    const newErrors = {};
+    if (!formData.email) {
+      newErrors.email = 'El correo electrónico es obligatorio.';
+    }
+    if (!formData.password) {
+      newErrors.password = 'La contraseña es obligatoria.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validar()) {
+      console.log('Formulario válido, enviar:', formData);
+      //enviar formulario aqui(enviar datos al backend, recibirlos, comparar campos, etc)
+      const datosParaEnviar={
+        email:formData.email,
+        password:formData.password,
+        //nombreUsuario:formData.nombreUsuario,
+      };
+      try{//lo que contiene el try no se si está bien
+        const response = await fetch('http://localhost:3000/api/v1/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(datosParaEnviar),
+        });
+    
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Error al iniciar sesión:', error);
+          return;
+        }
+    
+        const data = await response.json();
+        console.log('Inicio de sesión exitoso:', data);
+        navigate('/bienvenida');
+      }catch(error){
+        console.error('Error en el inicio de sesión',error);
+      }
+    }
+  };
+    return (
+        <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "rgb(223, 247, 253)" }}>
+          <div className="login-container shadow-lg text-center fade-in-up">
+            <h2 className="text-center">Iniciar Sesión</h2>
+            <form onSubmit={handleSubmit}>
+            <div className="form-grid-login">
+              <InputField type="email" name="email" placeholder="Correo electrónico" value={formData.email} onChange={handleChange} error={errors.email}/>
+              <InputField type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} error={errors.password}/>
+              </div>
+              <div className="d-flex justify-content-center">
+                <button type="submit" className="btn btn-primary mt-3">Iniciar sesión</button>
+              </div>
+            </form>
+            <p className="register-text mt-3 text-center">
+              No tienes cuenta? <Link to="/register">Regístrate</Link>
+            </p>
+          </div>
+        </div>
+      );
 }
