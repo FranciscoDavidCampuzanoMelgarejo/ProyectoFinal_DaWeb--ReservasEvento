@@ -59,7 +59,7 @@ const handleSubmit = async (e) => {
     //nombreUsuario:formData.nombreUsuario,
   };
   try{//lo que contiene el try no se si está bien
-    const response = await fetch('http://localhost:3000/api/v1/user/register', {
+    const response = await fetch('/api/v1/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ const handleSubmit = async (e) => {
             </div>
             </form>
             <p className="login-text mt-3 text-center">
-              Ya tienes cuenta? <Link to="/">Inicia sesión</Link>
+              Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
             </p>
           </div>
         </div>

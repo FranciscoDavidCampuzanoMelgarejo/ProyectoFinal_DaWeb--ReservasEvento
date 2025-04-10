@@ -36,7 +36,7 @@ export function FormularioLogin(){
         //nombreUsuario:formData.nombreUsuario,
       };
       try{//lo que contiene el try no se si está bien
-        const response = await fetch('http://localhost:3000/api/v1/user/login', {
+        const response = await fetch('/api/v1/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export function FormularioLogin(){
     
         const data = await response.json();
         console.log('Inicio de sesión exitoso:', data);
-        navigate('/bienvenida');
+        navigate('/');
       }catch(error){
         console.error('Error en el inicio de sesión',error);
       }

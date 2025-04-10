@@ -15,7 +15,6 @@ router.post('/login', checkCampos(['email', 'password'], ['email', 'password']),
 router.post('/logout', checkToken(), logout);
 
 router.post('/check-auth', checkToken(), (req, res) => {
-    console.log("CHECK-AUTH");
     return res.status(StatusCodes.NO_CONTENT).end();
 })
 

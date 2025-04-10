@@ -7,9 +7,13 @@ export function useAutenticacion({ initialCallback }) {
   const [callback, setCallback] = useState(initialCallback);
 
   useEffect(() => {
-    checkAuth(callback)
-        .then(() => setIsAutenticado(true))
-        .catch(() => setIsAutenticado(false))
+    checkAuth(initialCallback)
+        .then(() => {
+          setIsAutenticado(true);
+        })
+        .catch(() => {
+          setIsAutenticado(false);
+        })
         .finally(() => setCargando(false))
   }, [callback]);
 

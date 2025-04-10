@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 // Token de refresco: refresh_token
 export default function checkToken(tokenName = 'access_token') {
   return function (req, res, next) {
-    console.log("COMPROBANDO TOKEN");
     req.session = {
       usuario: null,
     }
