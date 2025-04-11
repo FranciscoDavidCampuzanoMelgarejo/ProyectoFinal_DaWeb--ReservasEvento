@@ -60,7 +60,7 @@ export function FormularioLogin(){
     }
   };
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "rgb(223, 247, 253)" }}>
+      
           <div className="login-container shadow-lg text-center fade-in-up">
             <h2 className="text-center">Iniciar Sesión</h2>
             <form onSubmit={handleSubmit}>
@@ -76,6 +76,6 @@ export function FormularioLogin(){
               No tienes cuenta? <Link to="/register">Regístrate</Link>
             </p>
           </div>
-        </div>
+       
       );
 }

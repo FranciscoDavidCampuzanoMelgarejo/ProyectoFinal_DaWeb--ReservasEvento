@@ -83,7 +83,7 @@ const handleSubmit = async (e) => {
 };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "rgb(223, 247, 253)" }}>
+      
           <div className="register-container shadow-lg text-center fade-in-up">
             <h2 className="text-center">Crear una cuenta</h2>
             <form onSubmit={handleSubmit}>
@@ -104,6 +104,6 @@ const handleSubmit = async (e) => {
               Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
             </p>
           </div>
-        </div>
+        
       );
     }
