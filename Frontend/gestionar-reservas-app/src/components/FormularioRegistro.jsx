@@ -9,7 +9,6 @@ export function FormularioRegistro(){
   const[formData, setFormData]=useState({
     nombre:'',
     apellidos:'',
-    nombreUsuario:'',
     email:'',
     password:'', 
     confirmarPassword:'',
@@ -20,18 +19,52 @@ const handleChange = (e) => {
   setFormData({ ...formData, [e.target.name]: e.target.value });
   setErrors({ ...errors, [e.target.name]: '' });
 };
+const handleBlur = (e) => {
+  const { name, value } = e.target;
+  const newErrors = { ...errors };
+  const expRegularNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+  const expRegularCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  switch (name) {
+    case 'nombre':
+      if(!value || !expRegularNombre.test(value)){
+        newErrors.nombre='Ingresa un nombre válido';
+      }
+      break;
+    case 'apellidos':
+      if(!value || !expRegularNombre.test(value)){
+        newErrors.apellidos='Ingresa un apellido válido';
+      }
+      break;
+    case 'email':
+      if (!value || !expRegularCorreo.test(value)){
+        newErrors.email='Ingresa un correo válido';
+      }
+      break;
+    case 'password':
+      if(!value){
+        newErrors.password='Ingresa una contraseña';
+      }
+      break;
+    case 'confirmarPassword':
+      if(value !== formData.password){
+        newErrors.confirmarPassword='Las contraseñas no coinciden';
+      }
+      break;
+    default:
+      break;
+  }
+  setErrors(newErrors);
+};
 const validacion=()=>{
   const newErrors={};
   const expRegularNombre=/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const expRegularCorreo=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if(!formData.nombre || !expRegularNombre.test(formData.nombre)){
-    newErrors.nombre='Ingresa un nombre valido(solo letras)'
+    newErrors.nombre='Ingresa un nombre valido'
   }
   if(!formData.apellidos || !expRegularNombre.test(formData.apellidos)){
-    newErrors.apellidos='Ingresa un apellido valido(solo letras)'
-  }
-  if(!formData.nombreUsuario){
-    newErrors.nombreUsuario='Ingresa un nombre de usuario'
+    newErrors.apellidos='Ingresa un apellido valido'
   }
   if(!formData.email || !expRegularCorreo.test(formData.email)){
     newErrors.email='Ingresa un correo valido'
@@ -42,7 +75,6 @@ const validacion=()=>{
   if (formData.password !== formData.confirmarPassword) {
     newErrors.confirmarPassword = 'Las contraseñas no coinciden.';
   }
-  console.log("Errores de validación:", newErrors);
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;
 };
@@ -88,12 +120,21 @@ const handleSubmit = async (e) => {
             <h2 className="text-center">Crear una cuenta</h2>
             <form onSubmit={handleSubmit}>
             <div className="form-grid-custom">
-              <InputField type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} error={errors.nombre} />
-              <InputField type="text" name="apellidos" placeholder="Apellidos"  value={formData.apellidos} onChange={handleChange} error={errors.apellidos} />
-              <InputField type="text" name="nombreUsuario" placeholder="Nombre de usuario"  value={formData.nombreUsuario} onChange={handleChange} error={errors.nombreUsuario} />
-              <InputField type="email" name="email" placeholder="Correo electrónico"  value={formData.email} onChange={handleChange} error={errors.email} />
-              <InputField type="password" name="password" placeholder="Contraseña"  value={formData.password} onChange={handleChange} error={errors.password} />
-              <InputField type="password" name="confirmarPassword" placeholder="Confirmar contraseña"  value={formData.confirmarPassword} onChange={handleChange} error={errors.confirmarPassword} />
+              <div className="nombre">
+                <InputField type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} onBlur={handleBlur} error={errors.nombre} />
+              </div>
+              <div className="apellidos">
+                <InputField type="text" name="apellidos" placeholder="Apellidos"  value={formData.apellidos} onChange={handleChange} onBlur={handleBlur} error={errors.apellidos} />
+              </div>
+              <div className="email">
+                <InputField type="email" name="email" placeholder="Correo electrónico"  value={formData.email} onChange={handleChange} onBlur={handleBlur} error={errors.email} />
+              </div>
+              <div className="password">
+                <InputField type="password" name="password" placeholder="Contraseña"  value={formData.password} onChange={handleChange} onBlur={handleBlur} error={errors.password} />
+              </div>
+              <div className="confirmar">
+                <InputField type="password" name="confirmarPassword" placeholder="Confirmar contraseña"  value={formData.confirmarPassword} onChange={handleChange} onBlur={handleBlur} error={errors.confirmarPassword} />
+              </div>
             </div>
 
             <div className="d-flex justify-content-center">

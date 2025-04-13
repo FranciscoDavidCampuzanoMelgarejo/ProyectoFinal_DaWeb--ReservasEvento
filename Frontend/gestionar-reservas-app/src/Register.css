@@ -44,36 +44,61 @@ button:hover {
     display: grid;
     gap: 15px;
   }
-  
+.input-error {
+  border: 2px solid rgb(255, 0, 0) !important;
+} 
 @media (min-width: 768px) {
   .form-grid-custom {
+    display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "nombre apellidos"
-      "usuario email"
-      "contraseña confirmar";
+      "email email"
+      "password password"
+      "confirmar confirmar";
+    gap: 15px;
   }
   
-  .form-control:nth-child(1) { grid-area: nombre; }
-  .form-control:nth-child(2) { grid-area: apellidos; }
-  .form-control:nth-child(3) { grid-area: usuario; }
-  .form-control:nth-child(4) { grid-area: email; }
-  .form-control:nth-child(5) { grid-area: contraseña; }
-  .form-control:nth-child(6) { grid-area: confirmar; }
+  .form-grid-custom .nombre{ grid-area: nombre; }
+  .form-grid-custom .apellidos{ grid-area: apellidos; }
+  .form-grid-custom .email{ grid-area: email; }
+  .form-grid-custom .password{ grid-area: password; }
+  .form-grid-custom .confirmar{ grid-area: confirmar; }
 }
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  display: block;
+  opacity: 0;
+  transform: translateY(2px);
+  animation: fadeInError 0.4s ease-out forwards;
+}
+
+@keyframes fadeInError {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
   }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   
-  .fade-in-up {
-    animation: fadeInUp 0.6s ease forwards;
-  }
+.fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
   
