@@ -15,9 +15,11 @@ export function FormularioRegistro(){
   });
 
 const[errors,setErrors]=useState({});
+const [backendError, setBackendError] = useState('');
 const handleChange = (e) => {
   setFormData({ ...formData, [e.target.name]: e.target.value });
   setErrors({ ...errors, [e.target.name]: '' });
+  setBackendError('');
 };
 const handleBlur = (e) => {
   const { name, value } = e.target;
@@ -44,6 +46,8 @@ const handleBlur = (e) => {
     case 'password':
       if(!value){
         newErrors.password='Ingresa una contraseña';
+      }else if (value.length < 6) {
+        newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
       }
       break;
     case 'confirmarPassword':
@@ -71,6 +75,8 @@ const validacion=()=>{
   }
   if(!formData.password){
     newErrors.password='Ingresa una contraseña'
+  } else if (formData.password.length < 6) {
+    newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
   }
   if (formData.password !== formData.confirmarPassword) {
     newErrors.confirmarPassword = 'Las contraseñas no coinciden.';
@@ -78,9 +84,24 @@ const validacion=()=>{
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;
 };
+
+const isFormularioValido=()=>{
+  const expRegularNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+    const expRegularCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return (
+      formData.nombre && expRegularNombre.test(formData.nombre) &&
+      formData.apellidos && expRegularNombre.test(formData.apellidos) &&
+      formData.email && expRegularCorreo.test(formData.email) &&
+      formData.password &&
+      formData.confirmarPassword === formData.password
+    );
+}
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   console.log("Intentando enviar el formulario...");
+  setBackendError('');
   if (!validacion()) { return;}
   //enviar formulario aqui(nombre apellidos correo contraseña etc)
   const datosParaEnviar={
@@ -103,6 +124,11 @@ const handleSubmit = async (e) => {
     if (!response.ok) {
       const error = await response.json();
       console.error('Error al registrar:', error);
+      //error.mensaje || error.mensaje_error (El definido en el backend)|| error.message
+      if (response.status === 409) {
+        //409 (conflicto) es el error de que el correo ya existe (en este caso)
+        setErrors(prev => ({ ...prev, email: error.mensaje_error }));
+      }
       return;
     }
 
@@ -118,6 +144,7 @@ const handleSubmit = async (e) => {
       
           <div className="register-container shadow-lg text-center fade-in-up">
             <h2 className="text-center">Crear una cuenta</h2>
+            {backendError && (<div className="alert alert-danger mt-2">{backendError}</div>)}
             <form onSubmit={handleSubmit}>
             <div className="form-grid-custom">
               <div className="nombre">
@@ -138,7 +165,7 @@ const handleSubmit = async (e) => {
             </div>
 
             <div className="d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary mt-3">Registrarme</button>
+              <button type="submit" className="btn btn-primary mt-3" disabled={!isFormularioValido()} title={!isFormularioValido ? "Completa todos los campos correctamente para continuar" : ""}>Registrarme</button>
             </div>
             </form>
             <p className="login-text mt-3 text-center">

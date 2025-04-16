@@ -10,6 +10,7 @@ export function FormularioLogin(){
     password:'', 
   });
   const[errors,setErrors]=useState({});
+  const [mensajeError, setMensajeError] = useState('');
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: '' });
@@ -60,6 +61,7 @@ export function FormularioLogin(){
         if (!response.ok) {
           const error = await response.json();
           console.error('Error al iniciar sesión:', error);
+          setMensajeError(error.message || 'Correo o contraseña incorrectos.');
           return;
         }
     
@@ -83,6 +85,7 @@ export function FormularioLogin(){
               <div className="d-flex justify-content-center">
                 <button type="submit" className="btn btn-primary mt-3">Iniciar sesión</button>
               </div>
+                {mensajeError && (<div className="mensaje-error-login mt-2">{mensajeError}</div>)}
             </form>
             <p className="register-text mt-3 text-center">
               No tienes cuenta? <Link to="/register">Regístrate</Link>
