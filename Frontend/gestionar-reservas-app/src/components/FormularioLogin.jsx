@@ -10,10 +10,23 @@ export function FormularioLogin(){
     password:'', 
   });
   const[errors,setErrors]=useState({});
+  const [mensajeError, setMensajeError] = useState('');
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: '' });
   };
+  const handleBlur=(e)=>{
+    const { name, value } = e.target;
+    const newErrors = { ...errors };
+    if(name === 'email' && !value){
+      newErrors.email = 'El correo electrónico es obligatorio.';
+    }
+    if(name === 'password' && !value){
+      newErrors.password = 'La contraseña es obligatoria.';
+    }
+    setErrors(newErrors);
+  };
+
   const validar = () => {
     const newErrors = {};
     if (!formData.email) {
@@ -48,6 +61,7 @@ export function FormularioLogin(){
         if (!response.ok) {
           const error = await response.json();
           console.error('Error al iniciar sesión:', error);
+          setMensajeError(error.message || 'Correo o contraseña incorrectos.');
           return;
         }
     
@@ -60,22 +74,23 @@ export function FormularioLogin(){
     }
   };
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "rgb(223, 247, 253)" }}>
+      
           <div className="login-container shadow-lg text-center fade-in-up">
             <h2 className="text-center">Iniciar Sesión</h2>
             <form onSubmit={handleSubmit}>
             <div className="form-grid-login">
-              <InputField type="email" name="email" placeholder="Correo electrónico" value={formData.email} onChange={handleChange} error={errors.email}/>
-              <InputField type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} error={errors.password}/>
+              <InputField type="email" name="email" placeholder="Correo electrónico" value={formData.email} onChange={handleChange} onBlur={handleBlur} error={errors.email}/>
+              <InputField type="password" name="password" placeholder="Contraseña" value={formData.password} onChange={handleChange} onBlur={handleBlur} error={errors.password}/>
               </div>
               <div className="d-flex justify-content-center">
                 <button type="submit" className="btn btn-primary mt-3">Iniciar sesión</button>
               </div>
+                {mensajeError && (<div className="mensaje-error-login mt-2">{mensajeError}</div>)}
             </form>
             <p className="register-text mt-3 text-center">
               No tienes cuenta? <Link to="/register">Regístrate</Link>
             </p>
           </div>
-        </div>
+       
       );
 }

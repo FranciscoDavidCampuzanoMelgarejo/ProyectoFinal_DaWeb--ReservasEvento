@@ -9,46 +9,99 @@ export function FormularioRegistro(){
   const[formData, setFormData]=useState({
     nombre:'',
     apellidos:'',
-    nombreUsuario:'',
     email:'',
     password:'', 
     confirmarPassword:'',
   });
 
 const[errors,setErrors]=useState({});
+const [backendError, setBackendError] = useState('');
 const handleChange = (e) => {
   setFormData({ ...formData, [e.target.name]: e.target.value });
   setErrors({ ...errors, [e.target.name]: '' });
+  setBackendError('');
+};
+const handleBlur = (e) => {
+  const { name, value } = e.target;
+  const newErrors = { ...errors };
+  const expRegularNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+  const expRegularCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  switch (name) {
+    case 'nombre':
+      if(!value || !expRegularNombre.test(value)){
+        newErrors.nombre='Ingresa un nombre válido';
+      }
+      break;
+    case 'apellidos':
+      if(!value || !expRegularNombre.test(value)){
+        newErrors.apellidos='Ingresa un apellido válido';
+      }
+      break;
+    case 'email':
+      if (!value || !expRegularCorreo.test(value)){
+        newErrors.email='Ingresa un correo válido';
+      }
+      break;
+    case 'password':
+      if(!value){
+        newErrors.password='Ingresa una contraseña';
+      }else if (value.length < 6) {
+        newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+      }
+      break;
+    case 'confirmarPassword':
+      if(value !== formData.password){
+        newErrors.confirmarPassword='Las contraseñas no coinciden';
+      }
+      break;
+    default:
+      break;
+  }
+  setErrors(newErrors);
 };
 const validacion=()=>{
   const newErrors={};
   const expRegularNombre=/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const expRegularCorreo=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if(!formData.nombre || !expRegularNombre.test(formData.nombre)){
-    newErrors.nombre='Ingresa un nombre valido(solo letras)'
+    newErrors.nombre='Ingresa un nombre valido'
   }
   if(!formData.apellidos || !expRegularNombre.test(formData.apellidos)){
-    newErrors.apellidos='Ingresa un apellido valido(solo letras)'
-  }
-  if(!formData.nombreUsuario){
-    newErrors.nombreUsuario='Ingresa un nombre de usuario'
+    newErrors.apellidos='Ingresa un apellido valido'
   }
   if(!formData.email || !expRegularCorreo.test(formData.email)){
     newErrors.email='Ingresa un correo valido'
   }
   if(!formData.password){
     newErrors.password='Ingresa una contraseña'
+  } else if (formData.password.length < 6) {
+    newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
   }
   if (formData.password !== formData.confirmarPassword) {
     newErrors.confirmarPassword = 'Las contraseñas no coinciden.';
   }
-  console.log("Errores de validación:", newErrors);
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;
 };
+
+const isFormularioValido=()=>{
+  const expRegularNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+    const expRegularCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return (
+      formData.nombre && expRegularNombre.test(formData.nombre) &&
+      formData.apellidos && expRegularNombre.test(formData.apellidos) &&
+      formData.email && expRegularCorreo.test(formData.email) &&
+      formData.password &&
+      formData.confirmarPassword === formData.password
+    );
+}
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   console.log("Intentando enviar el formulario...");
+  setBackendError('');
   if (!validacion()) { return;}
   //enviar formulario aqui(nombre apellidos correo contraseña etc)
   const datosParaEnviar={
@@ -71,6 +124,11 @@ const handleSubmit = async (e) => {
     if (!response.ok) {
       const error = await response.json();
       console.error('Error al registrar:', error);
+      //error.mensaje || error.mensaje_error (El definido en el backend)|| error.message
+      if (response.status === 409) {
+        //409 (conflicto) es el error de que el correo ya existe (en este caso)
+        setErrors(prev => ({ ...prev, email: error.mensaje_error }));
+      }
       return;
     }
 
@@ -83,27 +141,37 @@ const handleSubmit = async (e) => {
 };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "rgb(223, 247, 253)" }}>
+      
           <div className="register-container shadow-lg text-center fade-in-up">
             <h2 className="text-center">Crear una cuenta</h2>
+            {backendError && (<div className="alert alert-danger mt-2">{backendError}</div>)}
             <form onSubmit={handleSubmit}>
             <div className="form-grid-custom">
-              <InputField type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} error={errors.nombre} />
-              <InputField type="text" name="apellidos" placeholder="Apellidos"  value={formData.apellidos} onChange={handleChange} error={errors.apellidos} />
-              <InputField type="text" name="nombreUsuario" placeholder="Nombre de usuario"  value={formData.nombreUsuario} onChange={handleChange} error={errors.nombreUsuario} />
-              <InputField type="email" name="email" placeholder="Correo electrónico"  value={formData.email} onChange={handleChange} error={errors.email} />
-              <InputField type="password" name="password" placeholder="Contraseña"  value={formData.password} onChange={handleChange} error={errors.password} />
-              <InputField type="password" name="confirmarPassword" placeholder="Confirmar contraseña"  value={formData.confirmarPassword} onChange={handleChange} error={errors.confirmarPassword} />
+              <div className="nombre">
+                <InputField type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} onBlur={handleBlur} error={errors.nombre} />
+              </div>
+              <div className="apellidos">
+                <InputField type="text" name="apellidos" placeholder="Apellidos"  value={formData.apellidos} onChange={handleChange} onBlur={handleBlur} error={errors.apellidos} />
+              </div>
+              <div className="email">
+                <InputField type="email" name="email" placeholder="Correo electrónico"  value={formData.email} onChange={handleChange} onBlur={handleBlur} error={errors.email} />
+              </div>
+              <div className="password">
+                <InputField type="password" name="password" placeholder="Contraseña"  value={formData.password} onChange={handleChange} onBlur={handleBlur} error={errors.password} />
+              </div>
+              <div className="confirmar">
+                <InputField type="password" name="confirmarPassword" placeholder="Confirmar contraseña"  value={formData.confirmarPassword} onChange={handleChange} onBlur={handleBlur} error={errors.confirmarPassword} />
+              </div>
             </div>
 
             <div className="d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary mt-3">Registrarme</button>
+              <button type="submit" className="btn btn-primary mt-3" disabled={!isFormularioValido()} title={!isFormularioValido ? "Completa todos los campos correctamente para continuar" : ""}>Registrarme</button>
             </div>
             </form>
             <p className="login-text mt-3 text-center">
               Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
             </p>
           </div>
-        </div>
+        
       );
     }

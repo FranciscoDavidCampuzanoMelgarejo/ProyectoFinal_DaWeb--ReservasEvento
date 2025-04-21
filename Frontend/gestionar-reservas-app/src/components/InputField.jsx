@@ -1,4 +1,4 @@
-export function InputField({type,name,placeholder,value,onChange,error}){
+export function InputField({type,name,placeholder,value,onChange,onBlur,error}){
     return(
         <div>
             <input
@@ -6,11 +6,12 @@ export function InputField({type,name,placeholder,value,onChange,error}){
                 name={name}
                 placeholder={placeholder}
                 required
-                className="form-control"
+                className={`form-control ${error ? 'input-error' : ''}`}
                 value={value}
                 onChange={onChange}
+                onBlur={onBlur}
             />
-            {error && <span style={{color: 'red', fontSize:'0.9rem'}}>{error}</span>}
+             {error && (<span className="error-message"> ❗ {error}</span>)}
         </div>
     );
 }

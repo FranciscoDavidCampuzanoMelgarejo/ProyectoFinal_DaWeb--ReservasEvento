@@ -5,28 +5,28 @@ import '../Autenticacion.css';
 
 export function Autenticacion () {
   const divRef = useRef(null);
-  let location = useLocation();
+  const location = useLocation();
+
   return (
-    <div className="auth-view min-vh-100">
-      <h2>Layout Autenticacion</h2>
-      <SwitchTransition mode="out-in">
-        <CSSTransition
-          key={location.pathname}
-          appear={true}
-          in={true}
-          classNames='autenticacion'
-          timeout={150}
-          nodeRef={divRef}>
-
-            <div ref={divRef}>
-              <Outlet />
-            </div>
-
-        </CSSTransition>
-      </SwitchTransition>
-    </div>
+    <div className="auth-view">
+  <SwitchTransition mode="out-in">
+    <CSSTransition
+      key={location.pathname}
+      appear={true}
+      in={true}
+      classNames="autenticacion"
+      timeout={150}
+      nodeRef={divRef}
+    >
+      <div ref={divRef} className="d-flex justify-content-center align-items-center vh-100 w-100">
+        <Outlet />
+      </div>
+    </CSSTransition>
+  </SwitchTransition>
+</div>
   )
 }
+
 
 /* export function Autenticacion() {
   const nodeRef = useRef(null);
