@@ -1,3 +1,30 @@
+@import url('./font.css');
+/* Declarar variables globales para la web */
+:root {
+  /* Colores */
+  --clr-primary-700: #111827;
+  --clr-primary-500: #1f2937;
+  --clr-secondary-400: #4f46e5;
+  --clr-secondary-300: #6366f1;
+  --clr-neutral-100: #ffffff;
+  --clr-neutral-300: #b8bfc8;
+
+  /* Font sizes */
+  --fs-300: 0.8125rem;
+  --fs-400: 1rem;
+
+  /* Font weights */
+  --fw-300: 300;
+  --fw-400: 400;
+  --fw-500: 500;
+  --fw-600: 600;
+  --fw-700: 500;
+
+  /* Font family */
+  --ff-primary: 'Inter', sans-serif;
+}
+
+
 /* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
@@ -15,6 +42,7 @@ body {
   line-height: 1.5;
   /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
+  font-family: var(--ff-primary) !important;
 }
 
 /* 6. Improve media defaults */
@@ -44,6 +72,7 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
+  margin: 0;
 }
 
 /* 9. Improve line wrapping */
@@ -59,6 +88,12 @@ h6 {
   text-wrap: balance;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 /*
   10. Create a root stacking context
 */
@@ -66,3 +101,45 @@ h6 {
 #__next {
   isolation: isolate;
 }
+
+/* Estilos propios globales */
+.bg--primary-700 {
+  background-color: var(--clr-primary-700);
+}
+.bg--primary-500 {
+  background-color: var(--clr-primary-500);
+}
+.bg--secondary-400 {
+  background-color: var(--clr-secondary-400);
+}
+
+.clr--neutral-100 {
+  color: var(--clr-neutral-100);
+}
+.clr--neutral-500 {
+  color: var(--clr-neutral-300);
+}
+
+.fs--light {
+  font-size: var(--fs-300);
+}
+.fs--regular {
+  font-size: var(--fs-400);
+}
+
+.fw--light {
+  font-weight: var(--fw-300);
+}
+.fw--regular {
+  font-weight: var(--fw-400);
+}
+.fw--medium {
+  font-weight: var(--fw-500);
+}
+.fw--semibold {
+  font-weight: var(--fw-600);
+}
+.fw--bold {
+  font-weight: var(--fw-700);
+}
+

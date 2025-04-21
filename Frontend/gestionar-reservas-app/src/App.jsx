@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Autenticacion } from './views/Autenticacion.jsx';
 
 import { Home } from './views/Home.jsx';
+import { Dashboard } from './views/Dashboard.jsx';
 import { FormularioLogin } from './components/FormularioLogin.jsx';
 import { FormularioRegistro } from './components/FormularioRegistro.jsx';
 import { NotFound } from './views/NotFound.jsx';
@@ -12,7 +13,7 @@ function App() {
   return (
     <Routes>
       <Route element={<RutasProtegidas />}>
-        <Route path='/' element={<Home />}></Route>
+        <Route path='/' element={<Dashboard />}></Route>
       </Route> 
       <Route path='home' element={<Navigate to='/'/>}></Route>
       <Route element={<Autenticacion />}>
