@@ -3,6 +3,7 @@ import { InputField } from "./InputField";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import '../styles/register.css';
+import { checkEmail, checkPassword } from "../utils/validarCampos.js";
 
 export function FormularioRegistro() {
   const navigate = useNavigate();
@@ -126,14 +127,14 @@ export function FormularioRegistro() {
     return null;
   }
 
-  function checkEmail(valor) {
+  /* function checkEmail(valor) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(valor);
   }
 
   function checkPassword(valor) {
     return valor.length >= 5; // Longitud minima de una password: 5 caracteres
-  }
+  } */
 
   return (
     <form

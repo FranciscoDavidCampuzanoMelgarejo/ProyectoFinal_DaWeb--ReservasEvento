@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { InputField } from "./InputField";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import '../styles/login.css';
 import { useAuth } from "../hooks/useAuth";
+
+import { Link } from "react-router-dom";
+import { InputField } from "./InputField";
+import '../styles/login.css';
+
 export function FormularioLogin() {
   const navigate = useNavigate();
   const { login } = useAuth();

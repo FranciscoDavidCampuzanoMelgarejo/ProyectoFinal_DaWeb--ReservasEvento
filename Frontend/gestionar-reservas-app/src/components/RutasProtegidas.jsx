@@ -1,7 +1,9 @@
-import { Outlet } from "react-router";
-import { Home } from "../views/Home.jsx";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth.js";
+
+import { Outlet } from "react-router";
+import { Home } from "../views/Home.jsx";
+
 import { checkAuth } from "../services/check-auth.js";
 
 const authCallback = () => {

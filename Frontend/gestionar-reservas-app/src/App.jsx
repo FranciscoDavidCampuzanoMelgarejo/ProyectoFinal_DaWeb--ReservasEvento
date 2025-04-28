@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Autenticacion } from './views/Autenticacion.jsx';
 
-import { Home } from './views/Home.jsx';
 import { Dashboard } from './views/Dashboard.jsx';
 import { FormularioLogin } from './components/FormularioLogin.jsx';
 import { FormularioRegistro } from './components/FormularioRegistro.jsx';
