@@ -1,4 +1,4 @@
-import "../home_card.css";
+import '../styles/home_card.css';
 
 export function HomeCard({ titulo, contenido, children }) {
   return (

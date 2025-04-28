@@ -1,0 +1,46 @@
+/* Estilos propios */
+.register_form {
+  max-width: 475px;
+  height: 100%;
+}
+
+.btn__registro {
+  outline: none;
+  border: none;
+}
+.btn__registro:disabled {
+  background-color: var(--clr-secondary-600);
+  color: var(--clr-neutral-300);
+  cursor: not-allowed;
+}
+.btn__registro.enabled {
+  background-color: var(--clr-secondary-400);
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+.btn__registro.enabled:hover {
+   background-color: var(--clr-secondary-300);
+}
+
+.link_login {
+  text-decoration: none;
+  color: var(--clr-secondary-300);
+}
+.link_login:hover {
+  text-decoration: underline;
+}
+
+.fs--title {
+  font-size: 24px;
+}
+
+.fs--link {
+  font-size: 14px;
+}
+
+@media(min-width: 475px) {
+  .register_form {
+    height: auto;
+    border-radius: 8px;
+  }
+}

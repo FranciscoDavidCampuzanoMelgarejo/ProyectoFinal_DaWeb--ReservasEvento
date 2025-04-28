@@ -17,6 +17,7 @@ export default function checkToken(tokenName = 'access_token') {
       req.session.usuario = {
         id: payload.id,
         nombre: payload.nombre,
+        apellidos: payload.apellidos,
         rol: payload.rol
       }
 

@@ -15,7 +15,14 @@ router.post('/login', checkCampos(['email', 'password'], ['email', 'password']),
 router.post('/logout', checkToken(), logout);
 
 router.post('/check-auth', checkToken(), (req, res) => {
-    return res.status(StatusCodes.NO_CONTENT).end();
+    const usuario = req.session.usuario;
+    return res.status(StatusCodes.OK)
+        .json({
+            id: usuario.id,
+            nombre: usuario.nombre,
+            apellidos: usuario.apellidos,
+            rol: usuario.rol
+        })
 })
 
 router.post('/refresh', checkToken('refresh_token'), refreshToken);

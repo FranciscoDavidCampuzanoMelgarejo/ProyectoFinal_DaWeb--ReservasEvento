@@ -106,7 +106,7 @@ export async function login(req, res, next) {
     let tokenAcceso, tokenRefresco;
     try {
       tokenAcceso = jwt.sign(
-        { id: usuario.id, nombre: usuario.nombre, rol: usuario.rol },
+        { id: usuario.id, nombre: usuario.nombre, apellidos: usuario.apellidos, rol: usuario.rol },
         process.env.JWT_SECRETO,
         {
           expiresIn: "1h",
@@ -191,7 +191,7 @@ export async function refreshToken(req, res, next) {
         maxAge: 3600 * 1000,
         sameSite: "strict",
       })
-      .json({ok: true});
+      .json({ ok: true });
   } catch (error) {
     if (error instanceof CustomError) return next(error);
     return next(new Error(`Error al refrescar el token de acceso`));
