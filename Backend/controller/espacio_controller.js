@@ -7,9 +7,20 @@ export async function crearEspacio(req, res, next) {
   // 2. Obtener una conexion con la base de datos
   // 3. Crear el espacio en base de datos
 
-  const { nombre, propietario, capacidad, direccion, descripcion, estado } = req.body;
-
-  const [sentenciaSQL, valores] = sentenciaInsercionSQL('ESPACIO_FISICO', req.body);
+  let { nombre, propietario, capacidad, direccion, descripcion, estado } = req.body;
+  if (estado === 'ACTIVO') {
+    estado = 1;
+  } else if (estado === 'CERRADO') {
+    estado = 0;
+  } else {
+    estado = 1;
+  }
+  capacidad = Number(capacidad);
+  if (isNaN(capacidad)) {
+    return next(new Error('La capacidad debe ser un número'));
+  }
+  const datos = { nombre, propietario, capacidad, direccion, descripcion, estado };
+  const [sentenciaSQL, valores] = sentenciaInsercionSQL('ESPACIO_FISICO', datos);
   console.log(sentenciaSQL);
   console.log(valores);
 
@@ -29,8 +40,8 @@ export async function crearEspacio(req, res, next) {
             capacidad,
             direccion,
             descripcion,
-            estado: Boolean(estado)
-        })
+            estado
+        });
 
   } catch (error) {
     if(conexion) {
@@ -77,4 +88,62 @@ export async function modificarEspacio(req, res, next) {
         if (conexion)
             conexion.release();
     }
+}
+
+export async function listarEspacios(req, res, next) {
+  let conexion;
+  try {
+    conexion = await pool.getConnection();
+
+    const [espacios] = await conexion.query('SELECT * FROM ESPACIO_FISICO');
+
+    return res.status(StatusCodes.OK).json(espacios);
+  } catch (error) {
+    return next(new Error(`Error al listar los espacios físicos: ${error.message}`));
+  } finally {
+    if (conexion) conexion.release();
+  }
+}
+
+export async function eliminarEspacio(req, res, next) {
+  const { id } = req.params;
+
+  let conexion;
+  try {
+    conexion = await pool.getConnection();
+    await conexion.query("START TRANSACTION");
+    await conexion.execute('DELETE FROM ESPACIO_FISICO WHERE id = ?', [id]);
+    await conexion.query("COMMIT");
+
+    return res.status(StatusCodes.NO_CONTENT).end();
+  } catch (error) {
+    if (conexion) await conexion.query('ROLLBACK');
+    return next(new Error(`Error al eliminar espacio físico: ${error.message}`));
+  } finally {
+    if (conexion) conexion.release();
+  }
+}
+
+
+export async function obtenerEspacioPorId(req, res, next) {
+  const { id } = req.params;
+
+  let conexion;
+  try {
+    conexion = await pool.getConnection();
+    const [espacios] = await conexion.query(
+      'SELECT * FROM ESPACIO_FISICO WHERE id = ?',
+      [id]
+    );
+
+    if (espacios.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({ mensaje: 'Espacio no encontrado' });
+    }
+
+    return res.status(StatusCodes.OK).json(espacios[0]);
+  } catch (error) {
+    return next(new Error(`Error al obtener el espacio físico: ${error.message}`));
+  } finally {
+    if (conexion) conexion.release();
+  }
 }

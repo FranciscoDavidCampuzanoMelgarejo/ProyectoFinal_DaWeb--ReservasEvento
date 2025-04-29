@@ -1,0 +1,35 @@
+.grid-espacios {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .tarjeta-espacio {
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+  .tarjeta-espacio:hover {
+    transform: scale(1.02);
+  }
+  
+  .tarjeta-espacio h4 {
+    margin-bottom: 1rem;
+    color: rgb(0, 30, 75);
+  }
+  .estado {
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 0.5rem;
+  }
+  .estado.activo {
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 126, 0);
+  }
+  .estado.cerrado {
+    color: rgb(255, 255, 255);
+    background-color: rgb(255, 0, 0);
+  }
+  

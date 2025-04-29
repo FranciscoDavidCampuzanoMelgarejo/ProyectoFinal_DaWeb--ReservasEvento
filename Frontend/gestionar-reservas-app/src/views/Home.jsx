@@ -124,7 +124,7 @@ export function Home() {
                 <li>
                   <p className="d-flex gap-1 align-items-center">
                     <DeveloperHomeIcon />
-                    <span>Lorem, ipsum dolor.</span>
+                    <span>Serio Martínez Rosal</span>
                   </p>
                 </li>
               </ul>
