@@ -1,12 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Autenticacion } from "./views/Autenticacion.jsx";
 
-
-import { Home } from './views/Home.jsx';
-import { Dashboard } from './views/Dashboard.jsx';
-import { FormularioLogin } from './components/FormularioLogin.jsx';
-import { FormularioRegistro } from './components/FormularioRegistro.jsx';
-import { NotFound } from './views/NotFound.jsx';
 import { RutasProtegidas } from './components/RutasProtegidas.jsx';
 import { PrincipalLayout } from './views/PrincipalLayout';
 import { VistaEspacios } from './views/VistaEspacios';
@@ -17,7 +11,6 @@ import { EditarEspacio } from './views/EditarEspacio';
 import { FormularioLogin } from "./components/FormularioLogin.jsx";
 import { FormularioRegistro } from "./components/FormularioRegistro.jsx";
 import { NotFound } from "./views/NotFound.jsx";
-import { RutasProtegidas } from "./components/RutasProtegidas.jsx";
 import { useAuth } from "./hooks/useAuth.js";
 
 
@@ -28,7 +21,7 @@ function App() {
 
   <Routes>
     <Route element={<RutasProtegidas />}>
-      <Route path="/espacios" element={<PrincipalLayout />}>
+      <Route path="/" element={<PrincipalLayout />}>
         <Route index element={<VistaEspacios />} />
         <Route path="nuevo" element={<CrearEspacio />} />
         <Route path="editar/:id" element={<EditarEspacio />} />
