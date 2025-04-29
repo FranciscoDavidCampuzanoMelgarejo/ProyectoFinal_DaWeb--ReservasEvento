@@ -1,0 +1,64 @@
+/* Animaciones al entrar y salir */
+/* Estado inicial cuando aparece */
+.autenticacion-enter,
+.autenticacion-appear {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+/* Estado inicial cuando va a salir */
+.autenticacion-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.autenticacion-appear-active,
+.autenticacion-enter-active {
+  animation: fadeInAndSlideDown 150ms ease-in-out 0s 1 normal forwards;
+}
+
+.autenticacion-exit-active {
+  animation: fadeOutAndSlideUp 150ms ease-in 0s 1 normal forwards;
+}
+
+@keyframes fadeInAndSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutAndSlideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
+@media(min-width: 475px) {
+  .auth-view__container {
+    display: flex;
+    align-items: center;
+  }
+}
+
+#formularioRegistro,
+#formularioLogin {
+  --gap-campos: 1.85rem;
+}
+
+.gap--campos {
+  gap: var(--gap-campos);
+}

@@ -4,8 +4,11 @@
   /* Colores */
   --clr-primary-700: #111827;
   --clr-primary-500: #1f2937;
+  --clr-primary-300: #3e3f44;
+  --clr-secondary-600: #3730a3;
   --clr-secondary-400: #4f46e5;
   --clr-secondary-300: #6366f1;
+  --clr-terciary-300: #fc7975;
   --clr-neutral-100: #ffffff;
   --clr-neutral-300: #b8bfc8;
 
@@ -18,7 +21,7 @@
   --fw-400: 400;
   --fw-500: 500;
   --fw-600: 600;
-  --fw-700: 500;
+  --fw-700: 700;
 
   /* Font family */
   --ff-primary: 'Inter', sans-serif;
@@ -61,6 +64,7 @@ button,
 textarea,
 select {
   font: inherit;
+  color: inherit;
 }
 
 /* 8. Avoid text overflows */
@@ -113,11 +117,21 @@ ul {
   background-color: var(--clr-secondary-400);
 }
 
+.clr--primary-300 {
+  color: var(--clr-primary-300);
+}
+.clr--terciary-300 {
+  color: var(--clr-terciary-300);
+}
 .clr--neutral-100 {
   color: var(--clr-neutral-100);
 }
-.clr--neutral-500 {
+.clr--neutral-300 {
   color: var(--clr-neutral-300);
+}
+
+.border--primary-300 {
+  border-color: var(--clr-primary-300);
 }
 
 .fs--light {

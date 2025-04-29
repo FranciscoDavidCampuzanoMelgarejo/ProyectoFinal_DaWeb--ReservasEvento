@@ -1,26 +1,12 @@
+import { useAuth } from "../hooks/useAuth.js";
+
 import { Outlet } from "react-router";
-import { useAutenticacion } from "../hooks/useAutenticacion.js";
 import { Home } from "../views/Home.jsx";
 
 export function RutasProtegidas() {
-  const { isAutenticado, cargando } = useAutenticacion({
-    initialCallback: () => (
-      fetch('/api/v1/user/check-auth', {
-        method: 'POST',
-        credentials: "include"
-      })
-    )
-  });
+  const { usuario, cargando } = useAuth();
 
+  if (cargando) return <div>Cargando...</div>;
 
-  console.log("Cargando: ", cargando);
-  if (cargando) {
-    return <div>Cargando...</div>;
-  }
-
-  return (
-    <>
-      {isAutenticado ? <Outlet /> : <Home />}
-    </>
-  );
+  return <>{usuario.isLogged ? <Outlet /> : <Home />}</>;
 }

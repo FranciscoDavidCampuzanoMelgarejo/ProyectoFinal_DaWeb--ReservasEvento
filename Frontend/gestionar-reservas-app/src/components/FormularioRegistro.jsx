@@ -1,177 +1,217 @@
-import { useState } from 'react';
-import { InputField } from './InputField';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import '../Register.css';
+import { useState } from "react";
+import { InputField } from "./InputField";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import '../styles/register.css';
+import { checkEmail, checkPassword } from "../utils/validarCampos.js";
 
-export function FormularioRegistro(){
+export function FormularioRegistro() {
   const navigate = useNavigate();
-  const[formData, setFormData]=useState({
-    nombre:'',
-    apellidos:'',
-    email:'',
-    password:'', 
-    confirmarPassword:'',
+  const [formData, setFormData] = useState({
+    nombre: {
+      valor: "",
+      error: null,
+    },
+    apellidos: {
+      valor: "",
+      error: null,
+    },
+    email: {
+      valor: "",
+      error: null,
+    },
+    password: {
+      valor: "",
+      error: null,
+    },
+    confirmarPassword: {
+      valor: "",
+      error: null,
+    },
   });
 
-const[errors,setErrors]=useState({});
-const [backendError, setBackendError] = useState('');
-const handleChange = (e) => {
-  setFormData({ ...formData, [e.target.name]: e.target.value });
-  setErrors({ ...errors, [e.target.name]: '' });
-  setBackendError('');
-};
-const handleBlur = (e) => {
-  const { name, value } = e.target;
-  const newErrors = { ...errors };
-  const expRegularNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-  const expRegularCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isHabilitado = () => {
+    return Object.values(formData)
+      .every(campo => campo.valor.trim() !== '' && campo.error === null);
+  }
+  const classHabilitado = isHabilitado() ? 'enabled': '';
 
-  switch (name) {
-    case 'nombre':
-      if(!value || !expRegularNombre.test(value)){
-        newErrors.nombre='Ingresa un nombre válido';
-      }
-      break;
-    case 'apellidos':
-      if(!value || !expRegularNombre.test(value)){
-        newErrors.apellidos='Ingresa un apellido válido';
-      }
-      break;
-    case 'email':
-      if (!value || !expRegularCorreo.test(value)){
-        newErrors.email='Ingresa un correo válido';
-      }
-      break;
-    case 'password':
-      if(!value){
-        newErrors.password='Ingresa una contraseña';
-      }else if (value.length < 6) {
-        newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
-      }
-      break;
-    case 'confirmarPassword':
-      if(value !== formData.password){
-        newErrors.confirmarPassword='Las contraseñas no coinciden';
-      }
-      break;
-    default:
-      break;
-  }
-  setErrors(newErrors);
-};
-const validacion=()=>{
-  const newErrors={};
-  const expRegularNombre=/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-  const expRegularCorreo=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if(!formData.nombre || !expRegularNombre.test(formData.nombre)){
-    newErrors.nombre='Ingresa un nombre valido'
-  }
-  if(!formData.apellidos || !expRegularNombre.test(formData.apellidos)){
-    newErrors.apellidos='Ingresa un apellido valido'
-  }
-  if(!formData.email || !expRegularCorreo.test(formData.email)){
-    newErrors.email='Ingresa un correo valido'
-  }
-  if(!formData.password){
-    newErrors.password='Ingresa una contraseña'
-  } else if (formData.password.length < 6) {
-    newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
-  }
-  if (formData.password !== formData.confirmarPassword) {
-    newErrors.confirmarPassword = 'Las contraseñas no coinciden.';
-  }
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
+  const handleChange = (e) => {
+    const campo = e.target.name;
+    const valor = e.target.value;
 
-const isFormularioValido=()=>{
-  const expRegularNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-    const expRegularCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const error = comprobarError(campo, valor);
 
-    return (
-      formData.nombre && expRegularNombre.test(formData.nombre) &&
-      formData.apellidos && expRegularNombre.test(formData.apellidos) &&
-      formData.email && expRegularCorreo.test(formData.email) &&
-      formData.password &&
-      formData.confirmarPassword === formData.password
-    );
-}
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log("Intentando enviar el formulario...");
-  setBackendError('');
-  if (!validacion()) { return;}
-  //enviar formulario aqui(nombre apellidos correo contraseña etc)
-  const datosParaEnviar={
-    nombre:formData.nombre,
-    apellidos:formData.apellidos,
-    email:formData.email,
-    password:formData.password,
-    //nombreUsuario:formData.nombreUsuario,
-  };
-  try{//lo que contiene el try no se si está bien
-    const response = await fetch('/api/v1/user/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    setFormData((prev) => ({
+      ...prev,
+      [campo]: {
+        ...prev[campo],
+        valor,
+        error,
       },
-      credentials: 'include',
-      body: JSON.stringify(datosParaEnviar),
-    });
+    }));
+  };
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Error al registrar:', error);
-      //error.mensaje || error.mensaje_error (El definido en el backend)|| error.message
-      if (response.status === 409) {
-        //409 (conflicto) es el error de que el correo ya existe (en este caso)
-        setErrors(prev => ({ ...prev, email: error.mensaje_error }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("REGISTRANDO USUARIO");
+
+    try {
+      const respuestaFetch = await fetch('/api/v1/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: "omit",
+        body: JSON.stringify({
+          nombre: formData.nombre.valor,
+          apellidos: formData.apellidos.valor,
+          email: formData.email.valor,
+          password: formData.password.valor
+        })
+      });
+
+      if(!respuestaFetch.ok) {
+        switch (respuestaFetch.status) {
+          case 409:
+            console.log("Ya existe ese usuario");
+            setFormData(prev => ({
+              ...prev,
+              email: {
+                ...prev.email,
+                valor: '',
+                error: 'Correo electrónico en uso'
+              }
+            }));
+            break;
+          case 500:
+            console.log("Error en el servidor");
+            break;
+          default:
+            break;
+        }
+        return;
       }
-      return;
+      navigate('/login');
+    } catch (error) {
+      console.log(error);
     }
 
-    const data = await response.json();
-    console.log('Registro exitoso:', data);
-    navigate('/login');
-  }catch(error){
-    console.error('Error en el registro',error);
   }
-};
 
-    return (
-      
-          <div className="register-container shadow-lg text-center fade-in-up">
-            <h2 className="text-center">Crear una cuenta</h2>
-            {backendError && (<div className="alert alert-danger mt-2">{backendError}</div>)}
-            <form onSubmit={handleSubmit}>
-            <div className="form-grid-custom">
-              <div className="nombre">
-                <InputField type="text" name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} onBlur={handleBlur} error={errors.nombre} />
-              </div>
-              <div className="apellidos">
-                <InputField type="text" name="apellidos" placeholder="Apellidos"  value={formData.apellidos} onChange={handleChange} onBlur={handleBlur} error={errors.apellidos} />
-              </div>
-              <div className="email">
-                <InputField type="email" name="email" placeholder="Correo electrónico"  value={formData.email} onChange={handleChange} onBlur={handleBlur} error={errors.email} />
-              </div>
-              <div className="password">
-                <InputField type="password" name="password" placeholder="Contraseña"  value={formData.password} onChange={handleChange} onBlur={handleBlur} error={errors.password} />
-              </div>
-              <div className="confirmar">
-                <InputField type="password" name="confirmarPassword" placeholder="Confirmar contraseña"  value={formData.confirmarPassword} onChange={handleChange} onBlur={handleBlur} error={errors.confirmarPassword} />
-              </div>
-            </div>
+  /* FUNCIONES AUXILIARES */
+  /* Devuelve el error (mensaje) si se ha producido un error o null*/
+  function comprobarError(campo, valor) {
+    if (valor.trim() === "") return "Obligatorio";
 
-            <div className="d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary mt-3" disabled={!isFormularioValido()} title={!isFormularioValido ? "Completa todos los campos correctamente para continuar" : ""}>Registrarme</button>
-            </div>
-            </form>
-            <p className="login-text mt-3 text-center">
-              Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
-            </p>
-          </div>
-        
-      );
+    switch (campo) {
+      case "email":
+        {
+          if (!checkEmail(valor)) return "Correo electrónico incorrecto";
+        }
+        break;
+      case "password":
+        {
+          if (!checkPassword(valor))
+            return "La contraseña debe contener al menos 5 caracteres";
+        }
+        break;
+      case "confirmarPassword": {
+        if (formData.password.valor !== valor)
+          return "No coincide con la contraseña";
+        break;
+      }
+      default:
+        return null;
     }
+    return null;
+  }
+
+  /* function checkEmail(valor) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(valor);
+  }
+
+  function checkPassword(valor) {
+    return valor.length >= 5; // Longitud minima de una password: 5 caracteres
+  } */
+
+  return (
+    <form
+      id="formularioRegistro"
+      className="register_form text-white container-fluid py-5 px-3 px-sm-4 px-md-5 bg--primary-500"
+      onSubmit={handleSubmit}
+    >
+      <header className="text-center mb-5">
+        <div>{/* LOGO */}</div>
+        <div>
+          <h1 className="fs--title fw--semibold">Crear una cuenta</h1>
+        </div>
+      </header>
+
+      <div className="camposFormulario d-flex flex-column gap--campos mb-5">
+        <InputField
+          name="nombre"
+          label="nombre"
+          type="text"
+          value={formData.nombre.valor}
+          onChange={handleChange}
+          error={formData.nombre.error}
+        />
+
+        <InputField
+          name="apellidos"
+          label="apellidos"
+          type="text"
+          value={formData.apellidos.valor}
+          onChange={handleChange}
+          error={formData.apellidos.error}
+        />
+
+        <InputField
+          name="email"
+          label="correo electrónico"
+          type="email"
+          value={formData.email.valor}
+          onChange={handleChange}
+          error={formData.email.error}
+        />
+
+        <InputField
+          name="password"
+          label="contraseña"
+          type="password"
+          value={formData.password.valor}
+          onChange={handleChange}
+          error={formData.password.error}
+        />
+
+        <InputField
+          name="confirmarPassword"
+          label="confirmar contraseña"
+          type="password"
+          value={formData.confirmarPassword.valor}
+          onChange={handleChange}
+          error={formData.confirmarPassword.error}
+        />
+      </div>
+
+      <div className="mb-2">
+        <button
+          disabled={!isHabilitado()}
+          className={`btn__registro ${classHabilitado} w-100 p-2 rounded-1`}
+          type="submit"
+        >
+          Registrarse
+        </button>
+      </div>
+      <div className="fs--link">
+        <span>
+          <Link className="link_login" to="/login">
+            ¿Ya tienes una cuenta?
+          </Link>
+        </span>
+      </div>
+    </form>
+  );
+}

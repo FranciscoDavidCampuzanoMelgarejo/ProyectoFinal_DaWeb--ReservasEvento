@@ -1,0 +1,23 @@
+.label__field {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.label__error {
+    font-weight: var(--fw-400);
+    font-style: italic;
+}
+
+.input__field {
+  height: 44px;
+  outline: none;
+  border: 1px solid var(--clr-primary-300);
+  transition: border-color 0.2s ease;
+}
+.input__field:focus {
+  border-color: var(--clr-secondary-400);
+}
+
+.input__field.error {
+    border: 1px solid var(--clr-terciary-300);
+}

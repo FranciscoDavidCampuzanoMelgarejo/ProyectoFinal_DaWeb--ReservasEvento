@@ -10,7 +10,7 @@ import { LocationHomeIcon } from "../assets/icons/LocationHome.jsx";
 import { TicketHomeIcon } from "../assets/icons/TicketHome.jsx";
 import { DeveloperHomeIcon } from "../assets/icons/DeveloperHome.jsx";
 import { MailHomeIcon } from "../assets/icons/MailHome.jsx";
-import "../home.css";
+import "../styles/home.css";
 
 export function Home() {
   return (
@@ -56,7 +56,7 @@ export function Home() {
               <h1 className="homeDescription__title clr--neutral-100">
                 Crea Eventos Inolvidables
               </h1>
-              <h3 className="homeDescription__desc clr--neutral-500">
+              <h3 className="homeDescription__desc clr--neutral-300">
                 Gestione sin problemas sus eventos, descubra lugares únicos y
                 gestione reservas, todo en un solo lugar.
               </h3>

@@ -1,55 +1,36 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { useRef } from "react";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
-import '../Autenticacion.css';
+import "../styles/autenticacion.css";
+import { FormularioRegistro } from "../components/FormularioRegistro";
+import { FormularioLogin } from "../components/FormularioLogin";
 
-export function Autenticacion () {
+export function Autenticacion() {
   const divRef = useRef(null);
   const location = useLocation();
+  const formToRender =
+    location.pathname === "/register" ? (
+      <FormularioRegistro />
+    ) : (
+      <FormularioLogin />
+    );
 
   return (
     <div className="auth-view">
-  <SwitchTransition mode="out-in">
-    <CSSTransition
-      key={location.pathname}
-      appear={true}
-      in={true}
-      classNames="autenticacion"
-      timeout={150}
-      nodeRef={divRef}
-    >
-      <div ref={divRef} className="d-flex justify-content-center align-items-center vh-100 w-100">
-        <Outlet />
-      </div>
-    </CSSTransition>
-  </SwitchTransition>
-</div>
-  )
-}
-
-
-/* export function Autenticacion() {
-  const nodeRef = useRef(null);
-  let location = useLocation();
-  const isLogin = location.pathname === '/login';
-  console.log("COMPONENTE AUTENTICACION");
-
-  return (
-    <div className="min-vh-100">
       <SwitchTransition mode="out-in">
         <CSSTransition
-          key={location.pathname}
           appear={true}
-          in={true}
+          key={location.pathname}
           classNames="autenticacion"
+          nodeRef={divRef}
           timeout={150}
-          nodeRef={nodeRef}
+          unmountOnExit
         >
-          <div ref={nodeRef}>
-            {isLogin ? <FormularioLogin /> : <FormularioRegistro />}
+          <div ref={divRef} className="auth-view__container min-vh-100 vh-100">
+            {formToRender}
           </div>
         </CSSTransition>
       </SwitchTransition>
     </div>
   );
-} */
+}
