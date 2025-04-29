@@ -11,12 +11,10 @@ import CustomError from "../errors/CustomError.js";
 export async function checkAuth (callback) {
     try {
         let respuestaCallback = await callback(); // Este callback debe ser un FETCH al servidor
-        console.log("va");
         if(respuestaCallback.ok)
             return respuestaCallback;
 
         if(respuestaCallback.status === 401) {
-            
             // PETICION A /refresh     
                 const respuestaRefresh = await fetch('/api/v1/user/refresh', {
                     method: 'POST',
