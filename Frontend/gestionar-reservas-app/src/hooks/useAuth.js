@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/contextAuth";
+import { AuthContext } from "../context/contextAuth.jsx";
 
 export function useAuth() {
     const context = useContext(AuthContext);

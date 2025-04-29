@@ -1,10 +1,10 @@
 export function checkEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return regex.text(email);
+    return regex.test(email);
 }
 
 /* La password debería cumplir cierto patron */
 /* Debe contener minusculas, mayusculas y numeros */
 export function checkPassword(password) {
-    return password.length > 5;
+    return password.length >= 5;
 }

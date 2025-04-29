@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 import { Link } from "react-router-dom";
 import { InputField } from "./InputField";
-import '../styles/login.css';
+import "../styles/login.css";
 
 export function FormularioLogin() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { usuario, login } = useAuth();
+  
+  useEffect(() => {
+    console.log("USE EFFECT LOGIN");
+    if (usuario.isLogged) 
+      navigate("/");
+  }, []);
+
   const [formData, setFormData] = useState({
     email: {
       valor: "",
@@ -36,42 +43,41 @@ export function FormularioLogin() {
       [campo]: {
         ...prev[campo],
         valor,
-        error: null
+        error: null,
       },
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("LOGIN");
 
     try {
-      const respuestaFetch = await fetch('/api/v1/user/login', {
-        method: 'POST',
+      const respuestaFetch = await fetch("/api/v1/user/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           email: formData.email.valor,
-          password: formData.password.valor
-        })
+          password: formData.password.valor,
+        }),
       });
 
-      if(!respuestaFetch.ok) {
+      if (!respuestaFetch.ok) {
         switch (respuestaFetch.status) {
           case 404:
             console.log("No existe ningun usuario con esas credenciales");
-            setFormData(prev => ({
+            setFormData((prev) => ({
               ...prev,
               email: {
-                valor: '',
-                error: 'Credenciales incorrectas'
+                valor: "",
+                error: "Credenciales incorrectas",
               },
               password: {
-                valor: '',
-                error: 'Credenciales incorrectas'
-              }
+                valor: "",
+                error: "Credenciales incorrectas",
+              },
             }));
             break;
           case 500:
@@ -88,9 +94,10 @@ export function FormularioLogin() {
         id: usuario.id,
         nombre: usuario.nombre,
         apellidos: usuario.apellidos,
-        rol: usuario.rol
+        rol: usuario.rol,
       });
-      navigate('/');
+      console.log("USUARIO LOGUEADO");
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
