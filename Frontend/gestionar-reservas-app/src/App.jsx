@@ -22,15 +22,19 @@ function App() {
   return (
     <Routes>
       <Route element={<RutasProtegidas />}>
+        <Route path="/eventos" element={<PrincipalLayout />}>
+        </Route>
         <Route path="/espacios" element={<PrincipalLayout />}>
           <Route index element={<VistaEspacios />} />
           <Route path="nuevo" element={<CrearEspacio />} />
           <Route path="editar/:id" element={<EditarEspacio />} />
         </Route>
+        <Route path="/reservas" element={<PrincipalLayout />}>
+        </Route>
       </Route>
 
-      <Route path="home" element={<Navigate to="/espacios" />}></Route>
-      <Route path="/" element={<Navigate to='/espacios' />}></Route>
+      <Route path="home" element={<Navigate to="/eventos" />}></Route>
+      <Route path="/" element={<Navigate to='/eventos' />}></Route>
       <Route element={<Autenticacion />}>
         <Route path="login" element={<FormularioLogin />}></Route>
         <Route path="register" element={<FormularioRegistro />}></Route>
