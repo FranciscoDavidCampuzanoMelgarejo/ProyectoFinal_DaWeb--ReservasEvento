@@ -9,8 +9,27 @@
   --clr-secondary-400: #4f46e5;
   --clr-secondary-300: #6366f1;
   --clr-terciary-300: #fc7975;
+  --clr-terciary-600: #4d0806;
+  --clr-quaternary-300: #0e292d;
+  --clr-quaternary-100: #33ce95;
   --clr-neutral-100: #ffffff;
   --clr-neutral-300: #b8bfc8;
+
+  /* Colores paras las categorias */
+  --clr-academico-300: #62acff;
+  --clr-academico-600: #001b6a;
+
+  --clr-cultural-300: #ffbe79;
+  --clr-cultural-600: #6f2000;
+
+  --clr-entretenimiento-300: #b39fff;
+  --clr-entretenimiento-600: #260061;
+
+  --clr-deporte-300: #3effb2;
+  --clr-deporte-600: #003627;
+
+  --clr-otros-300: #d0d0d0;
+  --clr-otros-600: #282828;
 
   /* Font sizes */
   --fs-300: 0.8125rem;
@@ -116,9 +135,43 @@ ul {
 .bg--secondary-400 {
   background-color: var(--clr-secondary-400);
 }
+.bg--secondary-600 {
+  background-color: var(--clr-secondary-600);
+}
+.bg--terciary-600 {
+  background-color: var(--clr-terciary-600);
+}
+.bg--quaternary-300 {
+  background-color: var(--clr-quaternary-300);
+}
+.bg--neutral-100 {
+  background-color: var(--clr-neutral-100);
+}
+.bg--neutral-300 {
+  background-color: var(--clr-neutral-300);
+}
+
+.bg--academico-600 {
+  background-color: var(--clr-academico-600);
+}
+.bg--cultural-600 {
+  background-color: var(--clr-cultural-600);
+}
+.bg--entretenimiento-600 {
+  background-color: var(--clr-entretenimiento-600);
+}
+.bg--deporte-600 {
+  background-color: var(--clr-deporte-600);
+}
+.bg--otros-600 {
+  background-color: var(--clr-otros-600);
+}
 
 .clr--primary-300 {
   color: var(--clr-primary-300);
+}
+.clr--secondary-300 {
+  color: var(--clr-secondary-300);
 }
 .clr--terciary-300 {
   color: var(--clr-terciary-300);
@@ -129,9 +182,31 @@ ul {
 .clr--neutral-300 {
   color: var(--clr-neutral-300);
 }
+.clr--quaternary-100 {
+  color: var(--clr-quaternary-100);
+}
+
+.clr--academico-300 {
+  color: var(--clr-academico-300);
+}
+.clr--cultural-300 {
+  color: var(--clr-cultural-300);
+}
+.clr--entretenimiento-300 {
+  color: var(--clr-entretenimiento-300);
+}
+.clr--deporte-300 {
+  color: var(--clr-deporte-300);
+}
+.clr--otros-300 {
+  color: var(--clr-otros-300);
+}
 
 .border--primary-300 {
   border-color: var(--clr-primary-300);
+}
+.border--secondary-400 {
+  border-color: var(--clr-secondary-400);
 }
 
 .fs--light {

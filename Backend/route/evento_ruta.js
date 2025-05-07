@@ -2,10 +2,11 @@ import express from "express";
 import { checkCampos } from "../middleware/check_campos.js";
 import checkToken from "../middleware/check_token.js";
 import { isAdministador } from "../middleware/check_permisos.js";
-import { crearEvento } from "../controller/evento_controller.js";
+import { crearEvento, obtenerEventos } from "../controller/evento_controller.js";
 
 const router = express.Router();
 
+// Crear Evento
 router.post(
   "/",
   checkCampos(
@@ -35,5 +36,8 @@ router.post(
   isAdministador,
   crearEvento
 );
+
+// Obtener todos los eventos
+router.get('/', checkToken(), obtenerEventos);
 
 export default router;

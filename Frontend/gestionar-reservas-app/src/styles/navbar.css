@@ -1,0 +1,82 @@
+.navbar {
+  min-height: 76px;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none !important;
+}
+
+.nav-link {
+  color: var(--clr-neutral-100) !important;
+}
+.nav-link:not(.active) {
+  transition: background-color 0.2s ease-in;
+}
+.nav-link:not(.active):hover {
+  background-color: var(--clr-neutral-300);
+}
+.nav-link.active {
+  background-color: var(--clr-secondary-300);
+}
+
+/* Para 'desvanecer' el logo al clickar
+el boton del navbar */
+.navbar-brand {
+  opacity: 1;
+  transition: opacity 0.15s ease-in;
+}
+.navbar-brand.hide {
+  opacity: 0;
+}
+.navbar-brand:hover {
+  color: unset !important;
+}
+
+/* Estilos auxiliares */
+.fs--title {
+  font-size: 1.5rem !important;
+}
+
+@media (min-width: 576px) {
+  .navbar-nav {
+    font-size: 1.125rem;
+  }
+  .nav-link {
+    color: var(--clr-neutral-100) !important;
+    position: relative;
+    background-color: unset !important;
+  }
+  .nav-link:hover {
+    color: var(--clr-neutral-300) !important;
+    transition: color 0.15s ease-in;
+  }
+  .nav-link.active {
+    color: var(--clr-secondary-300) !important;
+  }
+
+  /* Pseudo-elementos */
+  .nav-link::after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 1px;
+    background-color: var(--clr-neutral-300);
+    width: 0px;
+    bottom: 5px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+  .nav-link:not(.active):hover::after {
+    width: 100%;
+    transition-delay: 0.15s;
+    transition: width 0.25s ease-in;
+  }
+  .nav-link.active::after {
+    background-color: var(--clr-secondary-300);
+    width: 100%;
+  }
+
+  .nav-link__icon {
+    display: none;
+  }
+}

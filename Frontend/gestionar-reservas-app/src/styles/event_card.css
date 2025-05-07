@@ -1,0 +1,33 @@
+.card__event {
+    border: 1px solid var(--clr-secondary-400);
+}
+
+.event__button {
+    flex: 1;
+    border: 1px solid var(--clr-neutral-100);
+    padding: .4rem 0;
+}
+
+.btn__menu {
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    transition: background-color .1s ease;
+}
+.btn__menu.activo {
+    background-color: var(--clr-secondary-600);
+}
+.btn__menu:not(.activo):hover {
+    background-color: var(--clr-secondary-400);
+}
+.btn__menu::after {
+    display: none !important;
+}
+
+/* Clases de utilidad */
+.fs--card-title {
+    font-size: 1.75rem;
+}
+.fs--card-text {
+    font-size: .9375rem;
+}

@@ -1,15 +1,15 @@
-import { Outlet, NavLink } from 'react-router-dom';
-import '../PrincipalLayout.css';
+import { Outlet, NavLink } from "react-router-dom";
+import { Navbar } from "../components/Navbar.jsx";
+
+// import "../PrincipalLayout.css";
+import "../styles/principal_layout.css";
 
 export function PrincipalLayout() {
   return (
-    <div className="layout-principal">
-      <nav className="navbar-principal">
-        <NavLink to="/espacios" className="nav-item">Espacios</NavLink>
-        <NavLink to="/espacios/nuevo" className="nav-item">Nuevo espacio</NavLink>
-      </nav>
+    <div className="layout_principal min-vh-100 bg--primary-700">
+      <Navbar />
 
-      <main className="contenido-principal">
+      <main className="contenido_principal">
         <Outlet />
       </main>
     </div>
