@@ -1,0 +1,9 @@
+.search__box {
+    border: 1px solid var(--clr-secondary-400);
+    max-width: 740px;
+}
+
+.input__search {
+    outline: none;
+    padding: .75rem 0;
+}

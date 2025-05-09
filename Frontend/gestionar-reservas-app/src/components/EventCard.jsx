@@ -11,12 +11,12 @@ import { useAuth } from "../hooks/useAuth.js";
 import estiloCategoria from "../constants/const_categoria.js";
 import "../styles/event_card.css";
 import { useState } from "react";
+import { EditEventIcon } from "../assets/icons/EditEvent.jsx";
+import { DeleteEventIcon } from "../assets/icons/DeleteEvent.jsx";
 
 export function EventCard({ evento }) {
-  const [isActivo, setisActivo] = useState(false);
   const { usuario } = useAuth();
 
-  const btnActivoClass = isActivo ? 'activo' : ''
   const eventStatusClasses = evento.cancelado
     ? "bg--terciary-600 clr--terciary-300"
     : "bg--quaternary-300 clr--quaternary-100";
@@ -35,20 +35,25 @@ export function EventCard({ evento }) {
           {usuario.isLogged && usuario.rol === "ADMINISTRADOR" && (
             <div className="event__menu dropdown">
               <button
-                className={`btn__menu ${btnActivoClass} dropdown-toggle d-flex justify-content-center align-items-center rounded-circle p-1 border-0`}
+                className="btn__menu dropdown-toggle d-flex justify-content-center align-items-center rounded-circle p-1 border-0"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                onClick={() => setisActivo(!isActivo)}
               >
                 <VerticalDotsIcon width={21} height={21} />
               </button>
-              <ul className="dropdown-menu">
+              <ul className="dropdown-menu fs--menu-text shadow--menu">
                 <li>
-                  <button className="dropdown-item" type="button">Editar evento</button>
+                  <button className="dropdown-item d-flex align-items-center gap-2" type="button">
+                    <EditEventIcon  width={20} height={20}/>
+                    <span>Editar evento</span>
+                  </button>
                 </li>
                 <li>
-                  <button className="dropdown-item" type="button">Cancelar evento</button>
+                  <button className="dropdown-item d-flex align-items-center gap-2" type="button">
+                    <DeleteEventIcon width={20} height={20}/>
+                    <span>Cancelar evento</span>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -101,7 +106,7 @@ export function EventCard({ evento }) {
 
       <div className="event__buttons d-flex justify-content-between align-items-center gap-2">
         <button
-          className="event__button rounded-3 bg-transparent"
+          className="event__button rounded-3"
           type="button"
         >
           Ver detalles
@@ -109,7 +114,7 @@ export function EventCard({ evento }) {
 
         {usuario.isLogged && usuario.rol === "CLIENTE" && (
           <button
-            className="event__button border border-0 rounded-3 bg--secondary-400"
+            className="event__button border border-0 rounded-3"
             type="button"
           >
             Hacer reserva
