@@ -1,0 +1,43 @@
+.conf_dialog {
+    max-width: 320px;
+}
+.conf_dialog::backdrop {
+    background-color: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(3px);
+}
+
+.dEvent__buttons > button:first-child.activar {
+    background-color: var(--clr-quaternary-200);
+}
+.dEvent__buttons > button:first-child.activar:hover {
+    background-color: var(--clr-quaternary-100);
+    transition: background-color .15s ease;
+}
+
+.dEvent__buttons > button:first-child.cancelar {
+    background-color: var(--clr-terciary-400);
+}
+.dEvent__buttons > button:first-child.cancelar:hover {
+    background-color: var(--clr-terciary-300);
+    transition: background-color .15s ease;
+}
+
+
+
+
+
+.dEvent__buttons > button:last-child {
+    background-color: var(--clr-primary-700);
+}
+.dEvent__buttons > button:last-child:hover {
+    background-color: var(--clr-primary-300);
+    transition: background-color .15s ease;
+}
+
+/* Clases de utilidad */
+.fs--dialog-title {
+    font-size: 1.3125rem;
+}
+.fs--dialog-text {
+    font-size: .9375rem;
+}

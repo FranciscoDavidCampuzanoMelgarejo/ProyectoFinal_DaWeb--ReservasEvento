@@ -3,7 +3,7 @@ import CustomError from "../errors/custom_error.js";
 import { StatusCodes } from "http-status-codes";
 import NotFoundError from "../errors/not_found_error.js";
 import ConflictError from "../errors/conflict_error.js";
-import { sentenciaInsercionSQL } from "../utils/utils.js";
+import { sentenciaActualizacionSQL, sentenciaInsercionSQL } from "../utils/utils.js";
 
 export async function crearEvento(req, res, next) {
   const idEspacio = req.body.id_espacio;
@@ -79,6 +79,7 @@ export async function crearEvento(req, res, next) {
 }
 
 export async function obtenerEventos(req, res, next) {
+  console.log("OBTENER EVENTOS");
   let conexion;
 
   try {
@@ -92,7 +93,7 @@ export async function obtenerEventos(req, res, next) {
       LEFT JOIN RESERVA R ON R.id_evento = E.id
       GROUP BY E.id
       `);
-    console.log(eventos);
+    // console.log(eventos);
 
     return res.status(StatusCodes.OK).json({
       num_eventos: eventos.length,
@@ -110,5 +111,73 @@ export async function obtenerEventos(req, res, next) {
     );
   } finally {
     if (conexion) conexion.release();
+  }
+}
+
+export async function modificarEvento(req, res, next) {
+  console.log("MODIFICAR EVENTO");
+  const id = parseInt(req.params.id);
+  const cancelado = req.body.cancelado;
+
+  let conexion;
+  try {
+    conexion = await pool.getConnection();
+    let [resultadoQuery] = await conexion.execute('SELECT * FROM EVENTO WHERE id = ?', [id]);
+
+    if(!resultadoQuery.length) {
+      throw new NotFoundError(`No existe el evento con id: ${id}`);
+    }
+
+    const evento = resultadoQuery[0];
+
+    const idEspacio = req.body.id_espacio ?? evento.id_espacio;
+    const plazas = isNaN(parseInt(req.body.plazas)) ? evento.plazas : parseInt(req.body.plazas);
+
+    [resultadoQuery] = await conexion.execute('SELECT * FROM ESPACIO_FISICO WHERE id = ?', [idEspacio]);
+
+    if(!resultadoQuery.length) {
+      throw new NotFoundError(`No existe el espacio fisico con id: ${idEspacio}`);
+    }
+
+    const espacio = resultadoQuery[0];
+
+    if(plazas > espacio.capacidad)
+      throw new ConflictError('La capacidad del espacio fisico es menor que el numero de plazas del evento');
+
+    const fechaInicio = evento.fecha_inicio;
+    if(cancelado && new Date() > fechaInicio)
+      throw new ConflictError('El evento no puede cambiar su estado si ya ha terminado o está realizandose');
+
+    if(req.body.fecha_inicio && req.body.fecha_fin) {
+      if(new Date(req.body.fecha_inicio) >= new Date(req.body.fecha_fin))
+        throw new ConflictError('La fecha de inicio del evento es posterior a la fecha de finalizacion del evento');
+
+      if(new Date() >= new Date(req.body.fecha_inicio)) 
+        throw new ConflictError('El evento no puedo cambiar sus fechas si ya ha termiando o está realizandose');
+    }
+
+    const[sentenciaSQL, valores] = sentenciaActualizacionSQL('EVENTO', req.body, 'WHERE id = ?', id);
+
+    try {
+      await conexion.query('START TRANSACTION');
+      [resultadoQuery] = await conexion.execute(sentenciaSQL, valores);
+      await conexion.query('COMMIT');
+    } catch (error) {
+      if(conexion)
+        await conexion.query('ROLLBACK');
+      throw new Error(`Error al actualizar el evento: ${id}`);
+    }
+    
+    return res.status(StatusCodes.NO_CONTENT)
+      .json({})
+
+  } catch (error) {
+    if(error instanceof CustomError)
+      return next(error);
+    return next(new Error(`Error al modificar el evento: ${error.message}`));
+    
+  } finally {
+    if(conexion)
+      conexion.release();
   }
 }
