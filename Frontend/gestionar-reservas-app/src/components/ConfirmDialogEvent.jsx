@@ -1,5 +1,9 @@
+import { ActiveEventIcon } from "../assets/icons/ActiveEvent.jsx";
 import { DialogActiveEventIcon } from "../assets/icons/DialogIcons/DialogActiveEvent";
 import { DialogCancelEventIcon } from "../assets/icons/DialogIcons/DialogCancelEvent";
+import { DialogErrorIcon } from "../assets/icons/DialogIcons/DialogError.jsx";
+import { DialogInfoIcon } from "../assets/icons/DialogIcons/DialogInfo.jsx";
+import { useNotification } from "../hooks/useNotification.js";
 import { checkAuth } from "../services/check-auth.js";
 import "../styles/confirm_dialog_event.css";
 
@@ -19,12 +23,17 @@ const fetchEventState = (id, cancelado) => {
 };
 
 export function ConfirmDialogEvent({ id, cancelado, ref, reset }) {
+
+  const { notificar } = useNotification();
+
   const textState = cancelado ? "Activar" : "Suspender";
   const classState = cancelado ? "activar" : "cancelar";
 
   const closeDialog = () => ref.current?.close();
 
   const handleClick = async () => {
+    let texto = '';
+    let dialogIcon = null;
     try {
       const responseFetch = await checkAuth(fetchEventState(id, !cancelado));
 
@@ -34,23 +43,17 @@ export function ConfirmDialogEvent({ id, cancelado, ref, reset }) {
         throw new Error(data.mensaje_error || 'Error al procesar la solicitud');
       }
 
-      // Aquí podrías usar un sistema de notificaciones en lugar de alert
-      if (cancelado) {
-        // Notificar éxito: "Evento activado"
-        alert('Evento aceptado');
-        console.log("Evento aceptado")
-      } else {
-        // Notificar éxito: "Evento suspendido"
-        alert('Evento suspendido');
-        console.log("Evento suspendido");
-      }
+      texto = cancelado ? 'Evento activado' : 'Evento suspendido';
+      dialogIcon = () => DialogInfoIcon;
+      
       console.log("RESET")
       reset();
     } catch (error) {
-      // Aquí podrías usar un sistema de notificaciones para mostrar el error
-      //console.error('Error:', error.message);
+      texto = error.message
+      dialogIcon = () => DialogErrorIcon;
     } finally {
       ref.current?.close();
+      notificar(texto, true, dialogIcon);
     }
   };
 

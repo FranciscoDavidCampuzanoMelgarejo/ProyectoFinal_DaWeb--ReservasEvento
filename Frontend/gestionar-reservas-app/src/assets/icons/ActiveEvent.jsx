@@ -1,4 +1,4 @@
-export function ActiveEventIcon({ width, height }) {
+export function ActiveEventIcon({ width = 24, height = 24 }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

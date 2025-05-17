@@ -15,15 +15,19 @@ import { CrearEspacio } from "./views/CrearEspacio";
 import { EditarEspacio } from "./views/EditarEspacio";
 import { VistaEventos } from "./views/VistaEventos.jsx";
 
+import { NotificationProvider } from "./context/contextNotification.jsx";
+import { NotificationDialog } from "./components/NotificationDialog.jsx";
+
 function App() {
   const { cargando } = useAuth();
 
   if (cargando) return <div>Cargando sesión...</div>;
 
   return (
-    <Routes>
-      <Route element={<RutasProtegidas />}>
-        {/* <Route path="/eventos" element={<PrincipalLayout />}>
+    <NotificationProvider>
+      <Routes>
+        <Route element={<RutasProtegidas />}>
+          {/* <Route path="/eventos" element={<PrincipalLayout />}>
         </Route>
         <Route path="/espacios" element={<PrincipalLayout />}>
           <Route index element={<VistaEspacios />} />
@@ -32,20 +36,21 @@ function App() {
         </Route>
         <Route path="/reservas" element={<PrincipalLayout />}>
         </Route> */}
-        <Route element={<PrincipalLayout />}>
-          <Route index path="eventos" element={<VistaEventos />}>
+          <Route element={<PrincipalLayout />}>
+            <Route index path="eventos" element={<VistaEventos />}></Route>
           </Route>
         </Route>
-      </Route>
 
-      <Route path="home" element={<Navigate to="/eventos" />}></Route>
-      <Route path="/" element={<Navigate to='/eventos' />}></Route>
-      <Route element={<Autenticacion />}>
-        <Route path="login" element={<FormularioLogin />}></Route>
-        <Route path="register" element={<FormularioRegistro />}></Route>
-      </Route>
-      <Route path="*" element={<NotFound />}></Route>
-    </Routes>
+        <Route path="home" element={<Navigate to="/eventos" />}></Route>
+        <Route path="/" element={<Navigate to="/eventos" />}></Route>
+        <Route element={<Autenticacion />}>
+          <Route path="login" element={<FormularioLogin />}></Route>
+          <Route path="register" element={<FormularioRegistro />}></Route>
+        </Route>
+        <Route path="*" element={<NotFound />}></Route>
+      </Routes>
+      <NotificationDialog />
+    </NotificationProvider>
   );
 }
 

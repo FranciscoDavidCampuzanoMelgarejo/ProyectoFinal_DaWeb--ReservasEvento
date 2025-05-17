@@ -9,6 +9,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import "./styles/index.css";
 import { AuthProvider } from "./context/contextAuth.jsx";
+import { NotificationProvider } from "./context/contextNotification.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

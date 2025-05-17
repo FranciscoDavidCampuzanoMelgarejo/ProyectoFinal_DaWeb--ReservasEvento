@@ -2,6 +2,7 @@
 /* Declarar variables globales para la web */
 :root {
   /* Colores */
+  --clr-primary-800: #070c16;
   --clr-primary-700: #111827;
   --clr-primary-500: #1f2937;
   --clr-primary-300: #3e3f44;
@@ -34,6 +35,7 @@
   --clr-otros-300: #d0d0d0;
   --clr-otros-600: #282828;
 
+  --clr-info-300: #75c3fc;
   /* Font sizes */
   --fs-300: 0.8125rem;
   --fs-400: 1rem;
@@ -129,6 +131,9 @@ ul {
 }
 
 /* Estilos propios globales */
+.bg--primary-800 {
+  background-color: var(--clr-primary-800);
+}
 .bg--primary-700 {
   background-color: var(--clr-primary-700);
 }

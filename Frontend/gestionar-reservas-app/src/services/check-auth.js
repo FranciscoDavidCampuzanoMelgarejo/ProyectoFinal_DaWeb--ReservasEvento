@@ -30,7 +30,8 @@ export async function checkAuth (callback) {
                 respuestaCallback = await callback();
                 return respuestaCallback
         }
-        throw new CustomError('Error en la peticion', respuestaCallback.status);
+        const error = await respuestaCallback.json();
+        throw new CustomError(error.mensaje_error, respuestaCallback.status);
     } catch (error) {
         if(error instanceof CustomError) {
             throw error;

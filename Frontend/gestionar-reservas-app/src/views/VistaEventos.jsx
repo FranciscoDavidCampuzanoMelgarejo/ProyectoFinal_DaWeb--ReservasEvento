@@ -16,7 +16,6 @@ export function VistaEventos() {
   const [eventos, setEventos] = useState([]);
 
   const reset = () => {
-    console.log("RESETEAND");
     checkAuth(getEvents)
       .then((responseFetch) => responseFetch.json())
       .then((data) => {
