@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 
 import { BurgerMenuIcon } from "../assets/icons/BurgerMenu.jsx";
 import { EventIcon } from "../assets/icons/Event.jsx";

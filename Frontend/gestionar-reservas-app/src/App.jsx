@@ -11,8 +11,6 @@ import { useAuth } from "./hooks/useAuth.js";
 
 import { PrincipalLayout } from "./views/PrincipalLayout";
 import { VistaEspacios } from "./views/VistaEspacios";
-import { CrearEspacio } from "./views/CrearEspacio";
-import { EditarEspacio } from "./views/EditarEspacio";
 import { VistaEventos } from "./views/VistaEventos.jsx";
 
 function App() {
@@ -23,17 +21,10 @@ function App() {
   return (
     <Routes>
       <Route element={<RutasProtegidas />}>
-        {/* <Route path="/eventos" element={<PrincipalLayout />}>
-        </Route>
-        <Route path="/espacios" element={<PrincipalLayout />}>
-          <Route index element={<VistaEspacios />} />
-          <Route path="nuevo" element={<CrearEspacio />} />
-          <Route path="editar/:id" element={<EditarEspacio />} />
-        </Route>
-        <Route path="/reservas" element={<PrincipalLayout />}>
-        </Route> */}
         <Route element={<PrincipalLayout />}>
-          <Route index path="eventos" element={<VistaEventos />}>
+          <Route path="eventos" element={<VistaEventos />} />
+          <Route path="espacios">
+            <Route index element={<VistaEspacios />} />
           </Route>
         </Route>
       </Route>
