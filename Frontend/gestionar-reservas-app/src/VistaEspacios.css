@@ -32,4 +32,38 @@
     color: rgb(255, 255, 255);
     background-color: rgb(255, 0, 0);
   }
-  
+  .modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 24, 39, 0.8);
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-panel-custom {
+  max-width: 600px;
+  width: 100%;
+}
+
+.espacio-card {
+  min-height: 330px;
+  max-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.espacio-descripcion {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  margin-bottom: 0;
+}

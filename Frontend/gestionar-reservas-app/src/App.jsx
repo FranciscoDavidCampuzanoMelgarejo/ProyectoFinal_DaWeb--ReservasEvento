@@ -11,8 +11,6 @@ import { useAuth } from "./hooks/useAuth.js";
 
 import { PrincipalLayout } from "./views/PrincipalLayout";
 import { VistaEspacios } from "./views/VistaEspacios";
-import { CrearEspacio } from "./views/CrearEspacio";
-import { EditarEspacio } from "./views/EditarEspacio";
 import { VistaEventos } from "./views/VistaEventos.jsx";
 
 import { NotificationProvider } from "./context/contextNotification.jsx";
@@ -25,30 +23,24 @@ function App() {
 
   return (
     <NotificationProvider>
-      <Routes>
-        <Route element={<RutasProtegidas />}>
-          {/* <Route path="/eventos" element={<PrincipalLayout />}>
-        </Route>
-        <Route path="/espacios" element={<PrincipalLayout />}>
-          <Route index element={<VistaEspacios />} />
-          <Route path="nuevo" element={<CrearEspacio />} />
-          <Route path="editar/:id" element={<EditarEspacio />} />
-        </Route>
-        <Route path="/reservas" element={<PrincipalLayout />}>
-        </Route> */}
-          <Route element={<PrincipalLayout />}>
-            <Route index path="eventos" element={<VistaEventos />}></Route>
+       <Routes>
+      <Route element={<RutasProtegidas />}>
+        <Route element={<PrincipalLayout />}>
+          <Route path="eventos" element={<VistaEventos />} />
+          <Route path="espacios">
+            <Route index element={<VistaEspacios />} />
           </Route>
         </Route>
+      </Route>
 
-        <Route path="home" element={<Navigate to="/eventos" />}></Route>
-        <Route path="/" element={<Navigate to="/eventos" />}></Route>
-        <Route element={<Autenticacion />}>
-          <Route path="login" element={<FormularioLogin />}></Route>
-          <Route path="register" element={<FormularioRegistro />}></Route>
-        </Route>
-        <Route path="*" element={<NotFound />}></Route>
-      </Routes>
+      <Route path="home" element={<Navigate to="/eventos" />}></Route>
+      <Route path="/" element={<Navigate to='/eventos' />}></Route>
+      <Route element={<Autenticacion />}>
+        <Route path="login" element={<FormularioLogin />}></Route>
+        <Route path="register" element={<FormularioRegistro />}></Route>
+      </Route>
+      <Route path="*" element={<NotFound />}></Route>
+    </Routes>
       <NotificationDialog />
     </NotificationProvider>
   );
