@@ -1,7 +1,7 @@
 // Esta funcion se encarga de realizar la peticion FETCH
 // que le pasan como callback.
 // Primero, realiza la peticion, si todo ha ido bien devuelve el resultado del fetch
-// Si se devuelve un 401 (no autorizado), entonces el refresh token ha caducado o no es valido, así que se busca
+// Si se devuelve un 401 (no autorizado), entonces el access token ha caducado o no es valido, así que se busca
 // renovarlo (refresh)
 // Si se ha podido renovar el access token, entonces se vuelve a hacer la peticion
 // Si no se ha podido renovar, entonces notificar el error para redirigir al login
