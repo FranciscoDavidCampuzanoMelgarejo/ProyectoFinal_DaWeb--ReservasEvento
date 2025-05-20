@@ -27,7 +27,6 @@ router.post(
 router.get(
   "/:id",
   checkToken(),
-  isAdministador,
   obtenerEspacioPorId
 );
 // End point para actualizar un espacio fisico
@@ -45,7 +44,6 @@ router.patch(
 router.get(
   "/",
   checkToken(),
-  isAdministador,
   listarEspacios
 );
 
