@@ -10,18 +10,25 @@ import { useAuth } from "../hooks/useAuth.js";
 
 import estiloCategoria from "../constants/const_categoria.js";
 import "../styles/event_card.css";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { EditEventIcon } from "../assets/icons/EditEvent.jsx";
+import { DeleteEventIcon } from "../assets/icons/DeleteEvent.jsx";
+import { ActiveEventIcon } from "../assets/icons/ActiveEvent.jsx";
+import { ConfirmDialogEvent } from "./ConfirmDialogEvent.jsx";
 
-export function EventCard({ evento }) {
-  const [isActivo, setisActivo] = useState(false);
+export function EventCard({ evento, reset }) {
   const { usuario } = useAuth();
+  const dialogRef = useRef(null)
 
-  const btnActivoClass = isActivo ? 'activo' : ''
   const eventStatusClasses = evento.cancelado
     ? "bg--terciary-600 clr--terciary-300"
     : "bg--quaternary-300 clr--quaternary-100";
 
   const eventCategoryClasses = estiloCategoria[evento.categoria];
+
+  const openDialog =  () => {
+    dialogRef.current?.showModal();
+  }
 
   return (
     <div className="card__event rounded-4 p-4 overflow-hidden clr--neutral-100">
@@ -35,20 +42,41 @@ export function EventCard({ evento }) {
           {usuario.isLogged && usuario.rol === "ADMINISTRADOR" && (
             <div className="event__menu dropdown">
               <button
-                className={`btn__menu ${btnActivoClass} dropdown-toggle d-flex justify-content-center align-items-center rounded-circle p-1 border-0`}
+                className="btn__menu dropdown-toggle d-flex justify-content-center align-items-center rounded-circle p-1 border-0"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                onClick={() => setisActivo(!isActivo)}
               >
                 <VerticalDotsIcon width={21} height={21} />
               </button>
-              <ul className="dropdown-menu">
+              <ul className="dropdown-menu fs--menu-text shadow--menu">
                 <li>
-                  <button className="dropdown-item" type="button">Editar evento</button>
+                  <button
+                    className="dropdown-item d-flex align-items-center gap-2"
+                    type="button"
+                  >
+                    <EditEventIcon width={20} height={20} />
+                    <span>Editar evento</span>
+                  </button>
                 </li>
                 <li>
-                  <button className="dropdown-item" type="button">Cancelar evento</button>
+                  <button
+                    className="dropdown-item d-flex align-items-center gap-2"
+                    type="button"
+                    onClick={openDialog}
+                  >
+                    {!evento.cancelado ? (
+                      <>
+                        <DeleteEventIcon width={20} height={20} />
+                        <span>Suspender evento</span>
+                      </>
+                    ) : (
+                      <>
+                        <ActiveEventIcon width={20} height={20}/>
+                        <span>Activar evento</span>
+                      </>
+                    )}
+                  </button>
                 </li>
               </ul>
             </div>
@@ -100,22 +128,22 @@ export function EventCard({ evento }) {
       {/* <div style={{ height: "1px" }} className="bg--neutral-300 my-4"></div> */}
 
       <div className="event__buttons d-flex justify-content-between align-items-center gap-2">
-        <button
-          className="event__button rounded-3 bg-transparent"
-          type="button"
-        >
+        <button className="event__button rounded-3" type="button">
           Ver detalles
         </button>
 
         {usuario.isLogged && usuario.rol === "CLIENTE" && (
           <button
-            className="event__button border border-0 rounded-3 bg--secondary-400"
+            className="event__button border border-0 rounded-3"
             type="button"
           >
             Hacer reserva
           </button>
         )}
       </div>
+
+      {/* DIALOGO DE CONFIRMACION */}
+      <ConfirmDialogEvent id={evento.id} cancelado={evento.cancelado} ref={dialogRef} reset={reset}/>
     </div>
   );
 }

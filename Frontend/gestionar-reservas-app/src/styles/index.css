@@ -2,6 +2,7 @@
 /* Declarar variables globales para la web */
 :root {
   /* Colores */
+  --clr-primary-800: #070c16;
   --clr-primary-700: #111827;
   --clr-primary-500: #1f2937;
   --clr-primary-300: #3e3f44;
@@ -9,10 +10,13 @@
   --clr-secondary-400: #4f46e5;
   --clr-secondary-300: #6366f1;
   --clr-terciary-300: #fc7975;
+  --clr-terciary-400: #cb4a46;
   --clr-terciary-600: #4d0806;
   --clr-quaternary-300: #0e292d;
+  --clr-quaternary-200: #25a677;
   --clr-quaternary-100: #33ce95;
   --clr-neutral-100: #ffffff;
+  --clr-neutral-200: #eeeeee;
   --clr-neutral-300: #b8bfc8;
 
   /* Colores paras las categorias */
@@ -31,6 +35,7 @@
   --clr-otros-300: #d0d0d0;
   --clr-otros-600: #282828;
 
+  --clr-info-300: #75c3fc;
   /* Font sizes */
   --fs-300: 0.8125rem;
   --fs-400: 1rem;
@@ -126,6 +131,9 @@ ul {
 }
 
 /* Estilos propios globales */
+.bg--primary-800 {
+  background-color: var(--clr-primary-800);
+}
 .bg--primary-700 {
   background-color: var(--clr-primary-700);
 }

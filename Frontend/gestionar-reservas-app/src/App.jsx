@@ -13,13 +13,17 @@ import { PrincipalLayout } from "./views/PrincipalLayout";
 import { VistaEspacios } from "./views/VistaEspacios";
 import { VistaEventos } from "./views/VistaEventos.jsx";
 
+import { NotificationProvider } from "./context/contextNotification.jsx";
+import { NotificationDialog } from "./components/NotificationDialog.jsx";
+
 function App() {
   const { cargando } = useAuth();
 
   if (cargando) return <div>Cargando sesión...</div>;
 
   return (
-    <Routes>
+    <NotificationProvider>
+       <Routes>
       <Route element={<RutasProtegidas />}>
         <Route element={<PrincipalLayout />}>
           <Route path="eventos" element={<VistaEventos />} />
@@ -37,6 +41,8 @@ function App() {
       </Route>
       <Route path="*" element={<NotFound />}></Route>
     </Routes>
+      <NotificationDialog />
+    </NotificationProvider>
   );
 }
 

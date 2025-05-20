@@ -1,0 +1,24 @@
+.dialog_notification {
+  min-width: 275px;
+  max-width: 275px;
+  box-shadow: 0px 0px 12px var(--clr-neutral-100);
+}
+.dialog_notification::backdrop {
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+}
+
+.notification__btn {
+    background-color: var(--clr-primary-500);
+    transition: background-color .15s ease;
+}
+.notification__btn:hover {
+    background-color: var(--clr-primary-300);
+}
+
+.fs--notification-text {
+    font-size: 1.125rem;
+}
+.fs--notification-btn {
+  font-size: 1rem;
+}
