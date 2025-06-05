@@ -14,6 +14,19 @@
     transform: scale(1.02);
   }
   
+  .boton-crear{
+    background-color: var(--clr-secondary-400);
+    color: var(--clr-neutral-100);
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: var(--fw-600);
+    border: none;
+    transition: background-color 0.2 ease;
+  }
+
+  .boton-crear:hover{
+    background-color: var(--clr-secondary-300);
+  }
   .tarjeta-espacio h4 {
     margin-bottom: 1rem;
     color: rgb(0, 30, 75);

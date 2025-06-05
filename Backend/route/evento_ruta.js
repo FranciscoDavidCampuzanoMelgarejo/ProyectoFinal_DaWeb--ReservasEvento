@@ -5,7 +5,8 @@ import { isAdministador } from "../middleware/check_permisos.js";
 import {
   crearEvento,
   obtenerEventos,
-  modificarEvento
+  modificarEvento,
+  obtenerEventosDisponibles
 } from "../controller/evento_controller.js";
 
 const router = express.Router();
@@ -65,5 +66,6 @@ router.patch(
   isAdministador,
   modificarEvento
 );
-
+//Para obtener eventos activos y no finalizados
+router.get("/disponibles", obtenerEventosDisponibles);
 export default router;

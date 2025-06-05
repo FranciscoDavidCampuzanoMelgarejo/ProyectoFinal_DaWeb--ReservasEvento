@@ -11,7 +11,7 @@ import notFound from "./middleware/not_found_route.js";
 import usuario_ruta from './route/usuario_ruta.js';
 import espacio_ruta from './route/espacio_ruta.js';
 import evento_ruta from './route/evento_ruta.js'
-
+import reserva_ruta from './route/reserva_ruta.js'
 const app = express();
 
 app.use(cors());
@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use('/api/v1/user', usuario_ruta);
 app.use('/api/v1/espacio', espacio_ruta);
 app.use('/api/v1/evento', evento_ruta);
-
+app.use('/api/v1/reserva', reserva_ruta);
 
 app.use(notFound, errorHandler);
 

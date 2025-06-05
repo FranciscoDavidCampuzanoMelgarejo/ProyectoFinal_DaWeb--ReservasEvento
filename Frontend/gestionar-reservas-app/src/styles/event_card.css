@@ -70,3 +70,16 @@
     0px 3px 14px 2px rgba(0, 0, 0, 0.12), 
     0px 5px 5px -3px rgba(0, 0, 0, 0.2);
 }
+
+.estado--activa{
+  background-color: var(--clr-secondary-300);
+  color: var(--clr-neutral-100);
+}
+.estado--curso{
+  background-color: var(--clr-quaternary-200);
+  color: var(--clr-neutral-100);
+}
+.estado--finalizada{
+  background-color: var(--clr-primary-300);
+  color: var(--clr-neutral-100);
+}

@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { VerticalDotsIcon } from "../assets/icons/VerticalDots.jsx";
 import { useAuth } from "../hooks/useAuth.js";
+import { ConfirmDialogEspacio } from "./ConfirmDialogEspacio.jsx";
 import "../styles/event_card.css"
 
 export function EspacioCard({ espacio, onEditar, onEliminar, onVer }) {
   const { usuario } = useAuth();
   const [menuVisible, setMenuVisible] = useState(false);
+  const dialogRef = useRef(null);
 
   const estadoClasses = espacio.estado === 1
     ? "bg--quaternary-300 clr--quaternary-100"
@@ -36,7 +38,7 @@ export function EspacioCard({ espacio, onEditar, onEliminar, onVer }) {
                   <button className="dropdown-item" onClick={() => onEditar(espacio)}>Editar</button>
                 </li>
                 <li>
-                  <button className="dropdown-item" onClick={() => onEliminar(espacio.id)}>Eliminar</button>
+                  <button className="dropdown-item" onClick={() => dialogRef.current?.showModal()}>Eliminar</button>
                 </li>
               </ul>
             </div>
@@ -66,13 +68,13 @@ export function EspacioCard({ espacio, onEditar, onEliminar, onVer }) {
         </div>
       </div>
 
-      {usuario.isLogged && usuario?.rol === "CLIENTE" && (
         <div className="event__buttons d-flex justify-content-between align-items-center gap-2 mt-auto">
           <button type="button" className="event__button rounded-3 bg-transparent" onClick={() => onVer(espacio)}>
             Ver detalles
           </button>
         </div>
-      )}
+        {/*Para una confirmacion visual de eliminacion*/}
+        <ConfirmDialogEspacio id={espacio.id} ref={dialogRef} reset={onEliminar}/>
     </div>
   );
 }
