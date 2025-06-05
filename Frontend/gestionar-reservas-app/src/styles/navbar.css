@@ -80,3 +80,12 @@ el boton del navbar */
     display: none;
   }
 }
+
+.user-icon-button{
+  opacity: 0.75;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.user-icon-button:hover{
+  opacity: 1;
+}

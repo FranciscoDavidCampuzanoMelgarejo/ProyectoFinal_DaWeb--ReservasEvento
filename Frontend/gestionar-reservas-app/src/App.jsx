@@ -12,6 +12,8 @@ import { useAuth } from "./hooks/useAuth.js";
 import { PrincipalLayout } from "./views/PrincipalLayout";
 import { VistaEspacios } from "./views/VistaEspacios";
 import { VistaEventos } from "./views/VistaEventos.jsx";
+import { VistaReservas } from "./views/VistaReservas.jsx";
+import { VistaReservasAdmin } from "./views/VistaReservasAdmin.jsx";
 
 import { NotificationProvider } from "./context/contextNotification.jsx";
 import { NotificationDialog } from "./components/NotificationDialog.jsx";
@@ -30,6 +32,8 @@ function App() {
           <Route path="espacios">
             <Route index element={<VistaEspacios />} />
           </Route>
+          <Route path="reservas" element={<VistaReservas />}/>
+          <Route path="admin/reservas" element={<VistaReservasAdmin/>}/>
         </Route>
       </Route>
 

@@ -3,7 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import {EspacioCard } from "../components/EspacioCard"
 import { EspacioModal } from '../components/EspacioModal';
+import { checkAuth } from "../services/check-auth.js";
+import { useNotification } from '../hooks/useNotification.js';
+import { NotificationDialog } from '../components/NotificationDialog.jsx';
+import { DialogInfoIcon } from '../assets/icons/DialogIcons/DialogInfo.jsx';
+import { DialogErrorIcon } from '../assets/icons/DialogIcons/DialogError.jsx';
 import '../VistaEspacios.css';
+
+const getEspacios =()=>{
+  return fetch("/api/v1/espacio",{
+    method: "GET",
+    credentials: "include",
+  });
+};
 
 export function VistaEspacios() {
   const { usuario } = useAuth();
@@ -13,9 +25,33 @@ export function VistaEspacios() {
   const [modoModal,setModoModal] =useState("crear");
   const [espacioSeleccionado,setEspacioSeleccionado] = useState(null);
   const navigate = useNavigate();
+  const { notificar } = useNotification();
+  //para usar el checkauth al igual que en vistaeventos
+  const reset=() => {
+    checkAuth(getEspacios)
+      .then((responseFetch) => responseFetch.json())
+      .then(data => {
+        setEspacios(data);
+      })
+      .catch(error => {
+        console.error('Error al cargar espacios:', error);
+        setCargando(false);
+      })
+      .finally(()=>{
+        setCargando(false);
+      });
+  };
+  useEffect(()=>{
+    reset();
+  },[]);
 
   const abrirEditarModal=(espacio)=>{
     setModoModal("editar");
+    setEspacioSeleccionado(espacio);
+    setMostrarModal(true);
+  };
+   const abrirVerModal=(espacio)=>{
+    setModoModal("ver");
     setEspacioSeleccionado(espacio);
     setMostrarModal(true);
   };
@@ -27,77 +63,66 @@ export function VistaEspacios() {
     try{
       const url=modoModal==="crear" ? "/api/v1/espacio" : `/api/v1/espacio/${espacioSeleccionado.id}`;
       const method=modoModal === "crear" ? "POST" : "PATCH";
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(datos)
-      });
+      //mirar si se aplica bien el checkAuth
+      const response = await checkAuth(()=>
+        fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(datos)
+      })
+    );
       if (!response.ok) throw new Error("Error al guardar");
 
       if (modoModal === "crear") {
         const nuevo = await response.json();
         setEspacios(prev => [...prev, nuevo]);
-        alert("Espacio creado");
+        notificar("Espacio creado correctamente", true, ()=>DialogInfoIcon);
       } else {
         setEspacios(prev => prev.map(e => e.id === espacioSeleccionado.id ? { ...e, ...datos } : e));
-        alert("Espacio actualizado");
+        notificar("Espacio actualizado correctamente", true, ()=>DialogInfoIcon);
       }
     } catch (err) {
       console.error(err);
-      alert("Error al guardar espacio");
+      notificar("Error al guardar espacio", true, ()=> DialogErrorIcon);
     }
   };
-  const abrirVerModal=(espacio)=>{
-    setModoModal("ver");
-    setEspacioSeleccionado(espacio);
-    setMostrarModal(true);
-  };
 
+  //handleeliminarEspacio esta hecho ahora con ConfirDialogEspacio
+  /*
   const handleEliminarEspacio = async (id) => {
     const confirmar = window.confirm('¿Seguro que quieres eliminar este espacio físico?');
     if (!confirmar) return;
   
     try {
-      const response = await fetch(`/api/v1/espacio/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
+      //mirar si se aplica bien asi el checkauth
+      const response = await checkAuth(()=>
+        fetch(`/api/v1/espacio/${id}`, {
+          method: 'DELETE',
+          credentials: 'include'
+      })
+    );
       if (!response.ok) {
         console.error('Error al eliminar espacio');
         return;
       }
       setEspacios(prevEspacios => prevEspacios.filter(espacio => espacio.id !== id));
-      alert('¡Espacio eliminado exitosamente!');
+      notificar("¡Espacio eliminado exitosamente!", true,()=>DialogInfoIcon);
+      reset();
     } catch (error) {
-      console.error('Error de red al eliminar espacio:', error);
+      console.error("Error de red al eliminar espacio:", error);
+      notificar("Error al eliminar el espacio", true, ()=>DialogErrorIcon);
     }
   };
-  
-  //para cargar los datos
-  useEffect(() => {
-    fetch('/api/v1/espacio', {
-      credentials: 'include',
-    })
-      .then(res => res.json())
-      .then(data => {
-        setEspacios(data);
-        setCargando(false);
-      })
-      .catch(error => {
-        console.error('Error al cargar espacios:', error);
-        setCargando(false);
-      });
-  }, []);
-
+*/
   if (cargando) return <p>Cargando espacios...</p>;
 
   return (
   <div className="container-fluid mt-4 px-4"> {/* usa solo container-fluid */}
     {usuario?.rol === 'ADMINISTRADOR' && (
       <div className="d-flex justify-content-end mb-4">
-        <button
-          className="btn btn-outline-primary"
+        <button className="btn fw--semibold clr--neutral-100"
+          style={{ backgroundColor: "var(--clr-secondary-400)", border: "none"}}
           onClick={() => {
             setModoModal("crear");
             setEspacioSeleccionado(null);
@@ -114,7 +139,7 @@ export function VistaEspacios() {
           <EspacioCard
             espacio={espacio}
             onEditar={abrirEditarModal}
-            onEliminar={handleEliminarEspacio}
+            onEliminar={reset}
             onVer={abrirVerModal}
           />
         </div>
@@ -128,6 +153,7 @@ export function VistaEspacios() {
       onClose={cerrarModal}
       onSubmit={manejarSubmit}
     />
+    <NotificationDialog/>
   </div>
 );
 }

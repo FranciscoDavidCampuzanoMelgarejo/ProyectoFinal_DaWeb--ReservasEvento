@@ -64,11 +64,37 @@ export async function modificarEspacio(req, res, next) {
     const [sentenciaSQL, valores] = sentenciaActualizacionSQL('ESPACIO_FISICO', req.body, 'WHERE id = ?', id);
     console.log(sentenciaSQL);
     console.log(valores);
+    const estadoNuevo=req.body.estado;
+    let cerrarEspacio=false;
+    let eventosActivos=[];
+  
+    if(estadoNuevo!== undefined){
+      if( estadoNuevo===0 || estadoNuevo==="CERRADO"){
+          req.body.estado=0;
+          cerrarEspacio=true;
+      }else if(estadoNuevo==="ACTIVO" || estadoNuevo===1){
+          req.body.estado=1;
+        } 
+    } 
+    
 
     let conexion;
     try {
         conexion = await pool.getConnection();
 
+        if(cerrarEspacio){
+          [eventosActivos]=await conexion.execute(
+            `SELECT id FROM EVENTO WHERE id_espacio= ? AND cancelado=false AND fecha_fin>NOW()`,
+            [id]
+          );
+        }
+        if(eventosActivos.length>0){
+          return res.status(StatusCodes.CONFLICT).json({
+            mensaje:"No se puede cerrar el espacio fisico porque hay eventos activos que lo estan usando"
+          });
+        }
+        
+        const[sentenciaSQL, valores]= sentenciaActualizacionSQL("ESPACIO_FISICO",req.body, "WHERE id=?",id);
         await conexion.query('START TRANSACTION');
         const [resultado] = await conexion.execute(sentenciaSQL, valores);
         await conexion.query('COMMIT');

@@ -161,6 +161,10 @@ export async function modificarEvento(req, res, next) {
     try {
       await conexion.query('START TRANSACTION');
       [resultadoQuery] = await conexion.execute(sentenciaSQL, valores);
+      //para eliminar las reservas asociadas al evento cuando pasa a estar cancelado
+      if(req.body.cancelado===true && !evento.cancelado){
+        await conexion.execute(`DELETE FROM RESERVA WHERE id_evento = ?`, [id]);
+      }
       await conexion.query('COMMIT');
     } catch (error) {
       if(conexion)
@@ -179,5 +183,29 @@ export async function modificarEvento(req, res, next) {
   } finally {
     if(conexion)
       conexion.release();
+  }
+}
+//para obtener eventos activos y no finalizados
+export async function obtenerEventosDisponibles(req, res, next){
+  let conexion;
+  try{
+    conexion = await pool.getConnection();
+    //selecciona 
+    const [eventos] =await conexion.execute(
+      `SELECT e.id, e.nombre, e.fecha_inicio, e.fecha_fin, e.plazas, e.plazas - COALESCE(SUM(r.plazas_reservadas),0) AS plazas_libres
+      FROM EVENTO e
+      LEFT JOIN RESERVA r ON r.id_evento = e.id
+      WHERE e.cancelado=false AND e.fecha_fin > NOW()
+      GROUP BY e.id
+      `
+    );
+    return res.status(200).json(eventos);
+  }catch (error) {
+    if (error instanceof CustomError) return next(error);
+    return next(
+      new Error(`Error al obtener todos los eventos: ${error.message}`)
+    );
+  } finally {
+    if (conexion) conexion.release();
   }
 }
