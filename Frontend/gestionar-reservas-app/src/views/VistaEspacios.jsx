@@ -153,7 +153,6 @@ export function VistaEspacios() {
       onClose={cerrarModal}
       onSubmit={manejarSubmit}
     />
-    <NotificationDialog/>
   </div>
 );
 }
