@@ -3,6 +3,7 @@ import { Navbar } from "../components/Navbar.jsx";
 
 // import "../PrincipalLayout.css";
 import "../styles/principal_layout.css";
+import { EspaciosProvider } from "../context/contextEspacios.jsx";
 
 export function PrincipalLayout() {
   return (
@@ -10,7 +11,9 @@ export function PrincipalLayout() {
       <Navbar />
 
       <main className="contenido_principal">
-        <Outlet />
+        <EspaciosProvider>
+          <Outlet />
+        </EspaciosProvider>
       </main>
     </div>
   );

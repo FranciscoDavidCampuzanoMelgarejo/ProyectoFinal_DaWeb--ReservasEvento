@@ -9,11 +9,10 @@ import "../styles/login.css";
 export function FormularioLogin() {
   const navigate = useNavigate();
   const { usuario, login } = useAuth();
-  
+
   useEffect(() => {
     console.log("USE EFFECT LOGIN");
-    if (usuario.isLogged) 
-      navigate("/");
+    if (usuario.isLogged) navigate("/");
   }, []);
 
   const [formData, setFormData] = useState({
@@ -120,19 +119,28 @@ export function FormularioLogin() {
         <InputField
           name="email"
           label="correo electrónico"
-          type="email"
-          value={formData.email.valor}
           error={formData.email.error}
-          onChange={handleChange}
-        />
+        >
+          <input
+            type="text"
+            name="email"
+            value={formData.email.valor}
+            onChange={handleChange}
+          />
+        </InputField>
+
         <InputField
           name="password"
           label="contraseña"
-          type="password"
-          value={formData.password.valor}
           error={formData.password.error}
-          onChange={handleChange}
-        />
+        >
+          <input
+            type="password"
+            name="password"
+            value={formData.password.valor}
+            onChange={handleChange}
+          />
+        </InputField>
       </div>
 
       <div className="mb-2">
