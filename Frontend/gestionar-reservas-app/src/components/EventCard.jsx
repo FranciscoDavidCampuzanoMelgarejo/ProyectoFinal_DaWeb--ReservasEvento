@@ -8,15 +8,17 @@ import { formatearFecha } from "../utils/formatearFecha.js";
 
 import { useAuth } from "../hooks/useAuth.js";
 
-import estiloCategoria from "../constants/const_categoria.js";
+import { estiloCategoria } from "../constants/const_categoria.js";
 import "../styles/event_card.css";
 import { useRef, useState } from "react";
 import { EditEventIcon } from "../assets/icons/EditEvent.jsx";
 import { DeleteEventIcon } from "../assets/icons/DeleteEvent.jsx";
 import { ActiveEventIcon } from "../assets/icons/ActiveEvent.jsx";
 import { ConfirmDialogEvent } from "./ConfirmDialogEvent.jsx";
+import { useEspacios } from "../hooks/useEspacios.js";
 
-export function EventCard({ evento, reset }) {
+export function EventCard({ ref, evento, reset }) {
+  const { cargarEspacios, setIdEspacio } = useEspacios();
   const { usuario } = useAuth();
   const dialogRef = useRef(null)
 
@@ -28,6 +30,12 @@ export function EventCard({ evento, reset }) {
 
   const openDialog =  () => {
     dialogRef.current?.showModal();
+  }
+
+  const openDialogEditEvent = async () => {
+    setIdEspacio(evento.id_espacio);
+    await cargarEspacios();
+    ref.current?.showModal();
   }
 
   return (
@@ -54,6 +62,7 @@ export function EventCard({ evento, reset }) {
                   <button
                     className="dropdown-item d-flex align-items-center gap-2"
                     type="button"
+                    onClick={openDialogEditEvent}
                   >
                     <EditEventIcon width={20} height={20} />
                     <span>Editar evento</span>

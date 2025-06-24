@@ -2,7 +2,7 @@ import { useState } from "react";
 import { InputField } from "./InputField";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import '../styles/register.css';
+import "../styles/register.css";
 import { checkEmail, checkPassword } from "../utils/validarCampos.js";
 
 export function FormularioRegistro() {
@@ -31,10 +31,11 @@ export function FormularioRegistro() {
   });
 
   const isHabilitado = () => {
-    return Object.values(formData)
-      .every(campo => campo.valor.trim() !== '' && campo.error === null);
-  }
-  const classHabilitado = isHabilitado() ? 'enabled': '';
+    return Object.values(formData).every(
+      (campo) => campo.valor.trim() !== "" && campo.error === null
+    );
+  };
+  const classHabilitado = isHabilitado() ? "enabled" : "";
 
   const handleChange = (e) => {
     const campo = e.target.name;
@@ -57,31 +58,31 @@ export function FormularioRegistro() {
     console.log("REGISTRANDO USUARIO");
 
     try {
-      const respuestaFetch = await fetch('/api/v1/user/register', {
-        method: 'POST',
+      const respuestaFetch = await fetch("/api/v1/user/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         credentials: "omit",
         body: JSON.stringify({
           nombre: formData.nombre.valor,
           apellidos: formData.apellidos.valor,
           email: formData.email.valor,
-          password: formData.password.valor
-        })
+          password: formData.password.valor,
+        }),
       });
 
-      if(!respuestaFetch.ok) {
+      if (!respuestaFetch.ok) {
         switch (respuestaFetch.status) {
           case 409:
             console.log("Ya existe ese usuario");
-            setFormData(prev => ({
+            setFormData((prev) => ({
               ...prev,
               email: {
                 ...prev.email,
-                valor: '',
-                error: 'Correo electrónico en uso'
-              }
+                valor: "",
+                error: "Correo electrónico en uso",
+              },
             }));
             break;
           case 500:
@@ -92,12 +93,11 @@ export function FormularioRegistro() {
         }
         return;
       }
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
-
-  }
+  };
 
   /* FUNCIONES AUXILIARES */
   /* Devuelve el error (mensaje) si se ha producido un error o null*/
@@ -127,15 +127,6 @@ export function FormularioRegistro() {
     return null;
   }
 
-  /* function checkEmail(valor) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(valor);
-  }
-
-  function checkPassword(valor) {
-    return valor.length >= 5; // Longitud minima de una password: 5 caracteres
-  } */
-
   return (
     <form
       id="formularioRegistro"
@@ -150,50 +141,66 @@ export function FormularioRegistro() {
       </header>
 
       <div className="camposFormulario d-flex flex-column gap--campos mb-5">
-        <InputField
-          name="nombre"
-          label="nombre"
-          type="text"
-          value={formData.nombre.valor}
-          onChange={handleChange}
-          error={formData.nombre.error}
-        />
+        <InputField name="nombre" label="nombre" error={formData.nombre.error}>
+          <input
+            type="text"
+            name="nombre"
+            value={formData.nombre.valor}
+            onChange={handleChange}
+          />
+        </InputField>
 
         <InputField
           name="apellidos"
           label="apellidos"
-          type="text"
-          value={formData.apellidos.valor}
-          onChange={handleChange}
           error={formData.apellidos.error}
-        />
+        >
+          <input
+            type="text"
+            name="apellidos"
+            value={formData.apellidos.valor}
+            onChange={handleChange}
+          />
+        </InputField>
 
         <InputField
           name="email"
-          label="correo electrónico"
-          type="email"
-          value={formData.email.valor}
-          onChange={handleChange}
+          label="correro electrónico"
           error={formData.email.error}
-        />
+        >
+          <input
+            type="text"
+            name="email"
+            value={formData.email.valor}
+            onChange={handleChange}
+          />
+        </InputField>
 
         <InputField
           name="password"
           label="contraseña"
-          type="password"
-          value={formData.password.valor}
-          onChange={handleChange}
           error={formData.password.error}
-        />
+        >
+          <input
+            type="password"
+            name="password"
+            value={formData.password.valor}
+            onChange={handleChange}
+          />
+        </InputField>
 
         <InputField
           name="confirmarPassword"
           label="confirmar contraseña"
-          type="password"
-          value={formData.confirmarPassword.valor}
-          onChange={handleChange}
           error={formData.confirmarPassword.error}
-        />
+        >
+          <input
+            type="password"
+            name="confirmarPassword"
+            value={formData.confirmarPassword.valor}
+            onChange={handleChange}
+          />
+        </InputField>
       </div>
 
       <div className="mb-2">
