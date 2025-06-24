@@ -5,11 +5,18 @@ import { checkAuth } from "../services/check-auth";
 export const AuthContext = createContext();
 
 const authCallback = () => {
-    return fetch("/api/v1/user/check-auth", {
-      method: "POST",
-      credentials: "include",
-    });
-  };
+  return fetch("/api/v1/user/check-auth", {
+    method: "POST",
+    credentials: "include",
+  });
+};
+
+const logoutCallback = () => {
+  return fetch("/api/v1/user/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+};
 
 // 2. Proveer el contexto
 export function AuthProvider({ children }) {
@@ -41,31 +48,34 @@ export function AuthProvider({ children }) {
       rol: null,
       isLogged: false,
     });
-    localStorage.removeItem("usuario");
+    checkAuth(logoutCallback)
+      .then(reponseFetch => console.log("Sesion cerrada"))
+      .catch(error => console.log("error"))
+      .finally(() => localStorage.removeItem('usuario'));
   };
 
   useEffect(() => {
-    if(!usuario.isLogged) {
-        checkAuth(authCallback)
-            .then(responseFetch => responseFetch.json())
-            .then(data => {
-                const { id, nombre, apellidos, rol } = data;
-                login({
-                    id,
-                    nombre,
-                    apellidos,
-                    rol
-                });
-            })
-            .catch(error => {
-                // console.log(error);
-                logout();
-            })
-            .finally(() => setCargando(false));
+    if (!usuario.isLogged) {
+      checkAuth(authCallback)
+        .then((responseFetch) => responseFetch.json())
+        .then((data) => {
+          const { id, nombre, apellidos, rol } = data;
+          login({
+            id,
+            nombre,
+            apellidos,
+            rol,
+          });
+        })
+        .catch((error) => {
+          // console.log(error);
+          logout();
+        })
+        .finally(() => setCargando(false));
     } else {
-        setCargando(false);
+      setCargando(false);
     }
-  }, [])
+  }, []);
 
   return (
     <AuthContext.Provider
