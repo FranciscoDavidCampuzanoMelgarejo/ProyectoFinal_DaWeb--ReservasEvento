@@ -5,6 +5,7 @@ import { ReservaCard } from '../components/ReservaCard.jsx';
 import { useNotification } from '../hooks/useNotification.js';
 import { NotificationDialog } from '../components/NotificationDialog.jsx';
 import { DialogErrorIcon } from '../assets/icons/DialogIcons/DialogError.jsx';
+import { DialogInfoIcon } from '../assets/icons/DialogIcons/DialogInfo.jsx';
 
 const getTodasLasReservas=()=>{
     return fetch("/api/v1/reserva/admin",{
@@ -43,7 +44,7 @@ export function VistaReservasAdmin(){
                 setReservas((prev)=>prev.filter((reserva)=>reserva.id!==id));
                 notificar("Reserva anulada correctamente", true, () => DialogInfoIcon);
             }else{
-                notificar("No se pudo anular la reserva", true, ()=> DialogInfoIcon);
+                notificar("No se pudo anular la reserva", true, () => DialogInfoIcon);
             }
         }catch(err){
             console.error("Error al anular reserva:", err);

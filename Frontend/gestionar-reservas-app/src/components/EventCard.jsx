@@ -18,7 +18,7 @@ import { ConfirmDialogEvent } from "./ConfirmDialogEvent.jsx";
 import { useEspacios } from "../hooks/useEspacios.js";
 
 export function EventCard({ ref, evento, reset }) {
-  const { cargarEspacios, setIdEspacio } = useEspacios();
+  const { cargarEspacios, setEventoSeleccionado } = useEspacios();
   const { usuario } = useAuth();
   const dialogRef = useRef(null)
 
@@ -33,7 +33,7 @@ export function EventCard({ ref, evento, reset }) {
   }
 
   const openDialogEditEvent = async () => {
-    setIdEspacio(evento.id_espacio);
+    setEventoSeleccionado(evento);
     await cargarEspacios();
     ref.current?.showModal();
   }
