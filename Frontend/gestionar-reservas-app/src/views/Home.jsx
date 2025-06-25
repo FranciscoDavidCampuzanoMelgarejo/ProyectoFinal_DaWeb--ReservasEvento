@@ -124,7 +124,7 @@ export function Home() {
                 <li>
                   <p className="d-flex gap-1 align-items-center">
                     <DeveloperHomeIcon />
-                    <span>Serio Martínez Rosal</span>
+                    <span>Sergio Martínez Rosal</span>
                   </p>
                 </li>
               </ul>
@@ -146,7 +146,12 @@ export function Home() {
                 </li>
                 <p className="d-flex gap-1 align-items-center">
                   <MailHomeIcon />
-                  <span>GitHub</span>
+                  <a
+                    href="https://github.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="enlace-github text-decoration-none"
+                  >GitHub</a>
                 </p>
               </ul>
             </div>
