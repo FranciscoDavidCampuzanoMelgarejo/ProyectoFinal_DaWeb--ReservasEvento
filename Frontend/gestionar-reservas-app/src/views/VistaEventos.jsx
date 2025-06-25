@@ -9,6 +9,7 @@ import { AddFiltersIcon } from "../assets/icons/AddFilters.jsx";
 import { CreateEventDialog } from "../components/CreateEventDialog.jsx";
 import { EspaciosProvider } from "../context/contextEspacios.jsx";
 import { useEspacios } from "../hooks/useEspacios.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 const getEvents = () => {
   return fetch("/api/v1/evento", {
@@ -18,6 +19,7 @@ const getEvents = () => {
 };
 
 export function VistaEventos() {
+  const { usuario } = useAuth();
   const { cargarEspacios } = useEspacios();
   const [eventos, setEventos] = useState([]);
   const dialogoRef = useRef(null);
@@ -52,13 +54,16 @@ export function VistaEventos() {
           />
         </div>
 
-        <button
-          type="button"
-          onClick={openDialog}
-          className="border-0 p-0 pe-2 bg-transparent clr--secondary-300"
-        >
-          <AddEventIcon width={35} height={35} />
-        </button>
+        {usuario.rol === "ADMINISTRADOR" && (
+          <button
+            type="button"
+            onClick={openDialog}
+            className="border-0 p-0 pe-2 bg-transparent clr--secondary-300"
+          >
+            <AddEventIcon width={35} height={35} />
+          </button>
+        )}
+
         <button
           type="button"
           className="border-0 p-0 bg-transparent clr--secondary-300"
@@ -67,20 +72,20 @@ export function VistaEventos() {
         </button>
       </div>
 
-        {/* GRID LAYOUT */}
-        <div className="container-fluid px-4">
-          <div className="row g-4">
-            {eventos.map((evento, index) => {
-              return (
-                <div key={evento.id} className="col-12 col-sm-6 col-xl-4">
-                  <EventCard ref={dialogoRef} evento={evento} reset={reset} />
-                </div>
-              );
-            })}
-          </div>
+      {/* GRID LAYOUT */}
+      <div className="container-fluid px-4">
+        <div className="row g-4">
+          {eventos.map((evento, index) => {
+            return (
+              <div key={evento.id} className="col-12 col-sm-6 col-xl-4">
+                <EventCard ref={dialogoRef} evento={evento} reset={reset} />
+              </div>
+            );
+          })}
         </div>
+      </div>
 
-        <CreateEventDialog ref={dialogoRef} reset={reset}/>
+      <CreateEventDialog ref={dialogoRef} reset={reset} />
     </>
   );
 }

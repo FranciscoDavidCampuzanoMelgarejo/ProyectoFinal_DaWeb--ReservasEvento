@@ -14,7 +14,7 @@ export const EspaciosContext = createContext();
 // 2. Proveer el contexto (creando un componente)
 export function EspaciosProvider({ children }) {
   const [espacios, setEspacios] = useState([]);
-  const [idEspacio, setIdEspacio] = useState(null);
+  const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
 
   const cargarEspacios = async () => {
     try {
@@ -31,9 +31,9 @@ export function EspaciosProvider({ children }) {
     <EspaciosContext.Provider
       value={{
         cargarEspacios,
-        setIdEspacio,
+        setEventoSeleccionado,
         espacios,
-        idEspacio
+        eventoSeleccionado
       }}
     >
       {children}

@@ -1,5 +1,4 @@
 export function formatearFecha(fechaISO) {
-
   // Opciones de formato
   const opciones = {
     weekday: "short", // sab
@@ -14,4 +13,12 @@ export function formatearFecha(fechaISO) {
   // Convertir y formatear en español
   const fechaFormateada = new Date(fechaISO).toLocaleString("es-ES", opciones);
   return fechaFormateada;
+}
+
+export function formatearFechaParaInput(fechaStr) {
+  if (!fechaStr) return "";
+  const fecha = new Date(fechaStr);
+  const offset = fecha.getTimezoneOffset();
+  fecha.setMinutes(fecha.getMinutes() - offset); // Corrige el desfase horario
+  return fecha.toISOString().slice(0, 16); // Elimina los segundos y zona
 }
