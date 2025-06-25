@@ -74,7 +74,8 @@ export function VistaEventos() {
     dialogoRef.current?.showModal();
   };
 
-  const openFiltrosDialog = () => {
+  const openFiltrosDialog = async () => {
+    await cargarEspacios();
     dialogoFiltrosRef.current?.showModal();
   };
 
