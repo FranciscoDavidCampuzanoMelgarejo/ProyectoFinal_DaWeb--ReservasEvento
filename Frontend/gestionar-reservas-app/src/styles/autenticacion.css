@@ -62,3 +62,25 @@
 .gap--campos {
   gap: var(--gap-campos);
 }
+.auth-view{
+  background-color: var(--clr-primary-800);
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  display: flex;
+}
+.auth-view__container{
+  width: 100%;
+  max-width: 500px;
+}
+
+.login_form,
+.register_form{
+  background-color: var(--clr-neutral-300);
+  border: 2px solid var(--clr-neutral-300);
+  color: var(--clr-neutral-300);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+}

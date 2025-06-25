@@ -88,3 +88,13 @@
         max-width: 1400px;
     }
 }
+
+.enlace-github{
+    color: var(--clr-neutral-100);
+    transition: color 0.3s ease;
+}
+
+.enlace-github:hover{
+    color: var(--clr-secondary-400);
+    cursor: pointer;
+}
