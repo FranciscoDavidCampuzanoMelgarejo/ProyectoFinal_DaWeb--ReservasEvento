@@ -23,19 +23,6 @@ const crearEventoCallback = (evento, ruta, metodo) => {
   };
 };
 
-const actualizarEventoCallback = (evento) => {
-  return () => {
-    return fetch(`/api/v1/evento/${evento.id}`, {
-      method: 'PATCH',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify(evento)
-    })
-  }
-}
-
 export function CreateEventDialog({ ref, reset }) {
   const { notificar } = useNotification();
   const { espacios, eventoSeleccionado, setEventoSeleccionado } = useEspacios();
