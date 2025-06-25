@@ -21,7 +21,7 @@ export function NotificationDialog () {
     return null;
 
     return (
-        <dialog id="dialogoNotificacion" ref={dialogRef} className="dialog_notification position-absolute top-50 start-50 translate-middle p-4 d-flex flex-column align-items-center justify-content-center gap-3 border-0 rounded-3 bg--primary-800 clr--neutral-100">
+        <dialog id="dialogoNotificacion" ref={dialogRef} className="dialog_notification position-fixed top-50 start-50 translate-middle p-4 d-flex flex-column align-items-center justify-content-center gap-3 border-0 rounded-3 bg--primary-800 clr--neutral-100">
             <div>
                 {
                     ComponenteIcono && <ComponenteIcono width={56} height={56}/>

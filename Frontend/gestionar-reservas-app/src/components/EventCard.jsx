@@ -131,24 +131,13 @@ export function EventCard({ ref, evento, reset }) {
               plazas disponibles
             </span>
           </div>
+
+          <div className="event__field d-flex align-items-center gap-3 mt-3">
+            <div className="rounded-3 p-3 w-100" style={{minHeight: "100px", maxHeight: "100px", overflowY: "scroll", border: "1px solid var(--clr-secondary-400)"}}>
+              {evento.descripcion}
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* <div style={{ height: "1px" }} className="bg--neutral-300 my-4"></div> */}
-
-      <div className="event__buttons d-flex justify-content-between align-items-center gap-2">
-        <button className="event__button rounded-3" type="button">
-          Ver detalles
-        </button>
-
-        {usuario.isLogged && usuario.rol === "CLIENTE" && (
-          <button
-            className="event__button border border-0 rounded-3"
-            type="button"
-          >
-            Hacer reserva
-          </button>
-        )}
       </div>
 
       {/* DIALOGO DE CONFIRMACION */}

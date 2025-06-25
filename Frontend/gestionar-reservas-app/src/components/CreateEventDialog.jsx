@@ -8,11 +8,12 @@ import { checkAuth } from "../services/check-auth.js";
 import { DialogInfoIcon } from "../assets/icons/DialogIcons/DialogInfo.jsx";
 import { useNotification } from "../hooks/useNotification.js";
 import { DialogErrorIcon } from "../assets/icons/DialogIcons/DialogError.jsx";
+import { formatearFechaParaInput } from "../utils/formatearFecha.js";
 
-const crearEventoCallback = (evento) => {
+const crearEventoCallback = (evento, ruta, metodo) => {
   return () => {
-    return fetch("/api/v1/evento", {
-      method: "POST",
+    return fetch(ruta, {
+      method: metodo,
       headers: {
         "Content-Type": "application/json",
       },
@@ -22,9 +23,22 @@ const crearEventoCallback = (evento) => {
   };
 };
 
+const actualizarEventoCallback = (evento) => {
+  return () => {
+    return fetch(`/api/v1/evento/${evento.id}`, {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify(evento)
+    })
+  }
+}
+
 export function CreateEventDialog({ ref, reset }) {
   const { notificar } = useNotification();
-  const { espacios, idEspacio } = useEspacios();
+  const { espacios, eventoSeleccionado, setEventoSeleccionado } = useEspacios();
   const [edicion, setEdicion] = useState(false);
   const [formData, setFormData] = useState({
     nombre: {
@@ -55,18 +69,36 @@ export function CreateEventDialog({ ref, reset }) {
       valor: "",
       error: null,
     },
-    espacio: {
+    id_espacio: {
       valor: "",
       error: null,
     },
   });
 
   useEffect(() => {
-    if(idEspacio !== null) {
+    if(eventoSeleccionado !== null) {
       console.log("EDITANDO EVENTO");
       setEdicion(true);
+      let newFormData = {};
+      Object.keys(formData).forEach((campo) => {
+        let valor = eventoSeleccionado[campo];
+  
+        // Si el campo es fecha, lo formateamos para el input
+        if (campo === "fecha_inicio" || campo === "fecha_fin") {
+          valor = formatearFechaParaInput(valor);
+        } else {
+          valor = valor?.toString() ?? "";
+        }
+  
+        newFormData[campo] = {
+          valor,
+          error: null,
+        };
+      });
+      setFormData(newFormData);
+      console.log(formData);
     }
-  }, [idEspacio])
+  }, [eventoSeleccionado])
 
   const isHabilitado = () => {
     return Object.values(formData).every(
@@ -114,6 +146,8 @@ export function CreateEventDialog({ ref, reset }) {
   };
 
   const handleClick = async () => {
+    const ruta = edicion ? `/api/v1/evento/${eventoSeleccionado.id}` : '/api/v1/evento';
+    const metodo = edicion ? 'PATCH' : 'POST';
     try {
       const responseFetch = await checkAuth(
         crearEventoCallback({
@@ -124,8 +158,8 @@ export function CreateEventDialog({ ref, reset }) {
           categoria: formData.categoria.valor,
           fecha_inicio: formData.fecha_inicio.valor,
           fecha_fin: formData.fecha_fin.valor,
-          id_espacio: formData.espacio.valor,
-        })
+          id_espacio: formData.id_espacio.valor,
+        }, ruta, metodo)
       );
 
       if (!responseFetch.ok) {
@@ -135,19 +169,27 @@ export function CreateEventDialog({ ref, reset }) {
       }
 
       reset();
-      ref.current?.close();
-      notificar("Evento creado con éxito", true, () => DialogInfoIcon);
+      closeDialog();
+      const texto = edicion ? 'editado' : 'creado'
+      notificar(`Evento ${texto} con éxito`, true, () => DialogInfoIcon);
     } catch (error) {
-      ref.current?.close();
+      closeDialog();
       notificar(error.message, true, () => DialogErrorIcon);
-    } finally {
-      setEdicion(false);
     }
   };
 
   const closeDialog = () => {
-    ref.current?.close();
     setEdicion(false);
+    let newFormData = {};
+    Object.keys(formData).forEach(campo => {
+      newFormData[campo] = {
+        valor: "",
+        error: null
+      }
+    });
+    setFormData(newFormData);
+    setEventoSeleccionado(null);
+    ref.current?.close();
   };
 
   return (
@@ -269,13 +311,13 @@ export function CreateEventDialog({ ref, reset }) {
           </InputField>
 
           <InputField
-            name="espacio"
+            name="id_espacio"
             label="espacio físico"
-            error={formData.espacio.error}
+            error={formData.id_espacio.error}
           >
             <select
-              name="espacio"
-              value={formData.espacio.valor}
+              name="id_espacio"
+              value={formData.id_espacio.valor}
               onChange={handleChange}
             >
               <option value="" disabled>
@@ -295,13 +337,13 @@ export function CreateEventDialog({ ref, reset }) {
             type="button"
             disabled={!isHabilitado()}
             onClick={handleClick}
-            className="w-100 border-0 bg-transparent"
+            className="w-100 btn bg--secondary-400 clr--neutral-100 fw--semibold"
           >
             {edicion ? 'Editar' : 'Crear'}
           </button>
           <button
             type="button"
-            className="w-100 border-0 bg-transparent"
+            className="w-100 btn btn-outline-light"
             onClick={closeDialog}
           >
             Cancelar
