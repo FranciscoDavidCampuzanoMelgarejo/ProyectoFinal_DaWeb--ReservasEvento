@@ -4,6 +4,11 @@
     overflow-y: scroll;
 }
 
+.create__event__dialog::backdrop {
+    background-color: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(3px);
+}
+
 .event__tarea {
     resize: none;
     height: auto;

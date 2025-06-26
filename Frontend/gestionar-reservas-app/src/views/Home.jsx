@@ -11,6 +11,7 @@ import { TicketHomeIcon } from "../assets/icons/TicketHome.jsx";
 import { DeveloperHomeIcon } from "../assets/icons/DeveloperHome.jsx";
 import { MailHomeIcon } from "../assets/icons/MailHome.jsx";
 import "../styles/home.css";
+import { GithubIcon } from "../assets/icons/GitHub.jsx";
 
 export function Home() {
   return (
@@ -103,9 +104,7 @@ export function Home() {
         <div className="container-fluid footer__sections">
           <div className="row">
             <div className="footer__title col-12 col-md-4 mb-5 mb-md-0">
-              <h2 style={{ fontSize: "21px" }}>
-                Ravento
-              </h2>
+              <h2 style={{ fontSize: "21px" }}>Ravento</h2>
             </div>
             <div className="footer__developers col-12 col-md-4 mb-4 mb-md-0">
               <h3 className="footer--subtitle text-uppercase mb-3">
@@ -131,7 +130,10 @@ export function Home() {
             </div>
 
             <div className="footer__contact col-12 col-md-4">
-              <h3 className="footer--subtitle text-uppercase mb-3" style={{ fontSize: "14px" }}>
+              <h3
+                className="footer--subtitle text-uppercase mb-3"
+                style={{ fontSize: "14px" }}
+              >
                 Contacto
               </h3>
               <ul
@@ -141,18 +143,28 @@ export function Home() {
                 <li>
                   <p className="d-flex gap-1 align-items-center">
                     <MailHomeIcon />
-                    <span>Lorem, ipsum dolor.</span>
+                    <span>franciscodavid.campuzanom@um.es</span>
                   </p>
                 </li>
-                <p className="d-flex gap-1 align-items-center">
-                  <MailHomeIcon />
-                  <a
-                    href="https://github.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="enlace-github text-decoration-none"
-                  >GitHub</a>
-                </p>
+                <li>
+                  <p className="d-flex gap-1 align-items-center">
+                    <MailHomeIcon />
+                    <span>s.martinezrosal@um.es</span>
+                  </p>
+                </li>
+                <li>
+                  <p className="d-flex gap-1 align-items-center">
+                    <GithubIcon width={16} height={16} />
+                    <a
+                      href="https://github.com/FranciscoDavidCampuzanoMelgarejo/ProyectoFinal_DaWeb--ReservasEvento"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="enlace-github text-decoration-none"
+                    >
+                      GitHub
+                    </a>
+                  </p>
+                </li>
               </ul>
             </div>
           </div>

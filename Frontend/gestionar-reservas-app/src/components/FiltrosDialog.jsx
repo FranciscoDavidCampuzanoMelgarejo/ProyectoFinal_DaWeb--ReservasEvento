@@ -27,6 +27,10 @@ export function FiltrosDialog({ ref, actualizarFiltros }) {
 
     switch (campo) {
       case "plazas":
+        if(valor.trim() === "") {
+          setPlazasMin(valor);
+          break;
+        }
         if (!isNaN(valor) && parseInt(valor) > 0) setPlazasMin(parseInt(valor));
         break;
 
@@ -34,8 +38,7 @@ export function FiltrosDialog({ ref, actualizarFiltros }) {
         setCategoria(valor);
         break;
       case "espacios":
-        if(!isNaN(valor))
-            setIdEspacio(parseInt(valor));
+        if (!isNaN(valor)) setIdEspacio(parseInt(valor));
         break;
       default:
         break;
@@ -76,12 +79,26 @@ export function FiltrosDialog({ ref, actualizarFiltros }) {
               type="text"
               value={plazasMin}
               onChange={handleChange}
+              className="w-100 py-2 px-3 rounded-2 bg--primary-700"
+              style={{
+                border: "1px solid var(--clr-primary-300)",
+                outline: "none",
+              }}
             />
           </div>
 
           <div>
             <p>Categoria</p>
-            <select name="categorias" value={categoria} onChange={handleChange}>
+            <select
+              name="categorias"
+              value={categoria}
+              onChange={handleChange}
+              className="w-100 py-2 px-3 rounded-2 bg--primary-700"
+              style={{
+                border: "1px solid var(--clr-primary-300)",
+                outline: "none",
+              }}
+            >
               <option value="" disabled>
                 Selecciona una categoria
               </option>
@@ -95,7 +112,16 @@ export function FiltrosDialog({ ref, actualizarFiltros }) {
 
           <div>
             <p>Espacios</p>
-            <select name="espacios" value={idEspacio} onChange={handleChange}>
+            <select
+              name="espacios"
+              value={idEspacio}
+              onChange={handleChange}
+              className="w-100 py-2 px-3 rounded-2 bg--primary-700"
+              style={{
+                border: "1px solid var(--clr-primary-300)",
+                outline: "none",
+              }}
+            >
               <option value="" disabled>
                 Selecciona un espacio
               </option>
@@ -114,7 +140,7 @@ export function FiltrosDialog({ ref, actualizarFiltros }) {
             onClick={handleClick}
             className="w-100 btn bg--secondary-400 clr--neutral-100 fw--semibold"
           >
-            Aplicar filtros
+            Aplicar
           </button>
           <button
             type="button"
