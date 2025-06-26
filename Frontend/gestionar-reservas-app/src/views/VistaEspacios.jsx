@@ -9,6 +9,7 @@ import { NotificationDialog } from '../components/NotificationDialog.jsx';
 import { DialogInfoIcon } from '../assets/icons/DialogIcons/DialogInfo.jsx';
 import { DialogErrorIcon } from '../assets/icons/DialogIcons/DialogError.jsx';
 import '../VistaEspacios.css';
+import CustomError from '../errors/CustomError.js';
 
 const getEspacios =()=>{
   return fetch("/api/v1/espacio",{
@@ -18,7 +19,7 @@ const getEspacios =()=>{
 };
 
 export function VistaEspacios() {
-  const { usuario } = useAuth();
+  const { usuario, logout } = useAuth();
   const [espacios, setEspacios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [mostrarModal, setMostrarModal] =useState(false);
@@ -36,6 +37,8 @@ export function VistaEspacios() {
       .catch(error => {
         console.error('Error al cargar espacios:', error);
         setCargando(false);
+        if(error instanceof CustomError && error.codigoEstado === 401)
+          logout();
       })
       .finally(()=>{
         setCargando(false);
@@ -84,7 +87,10 @@ export function VistaEspacios() {
       }
     } catch (err) {
       console.error(err);
-      notificar("Error al guardar espacio", true, ()=> DialogErrorIcon);
+      if(err instanceof CustomError && err.codigoEstado === 401) 
+        logout();
+      else
+        notificar("Error al guardar espacio", true, ()=> DialogErrorIcon);
     }
   };
 

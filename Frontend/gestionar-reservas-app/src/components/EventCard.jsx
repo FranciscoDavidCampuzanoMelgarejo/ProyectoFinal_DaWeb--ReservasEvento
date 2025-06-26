@@ -16,11 +16,12 @@ import { DeleteEventIcon } from "../assets/icons/DeleteEvent.jsx";
 import { ActiveEventIcon } from "../assets/icons/ActiveEvent.jsx";
 import { ConfirmDialogEvent } from "./ConfirmDialogEvent.jsx";
 import { useEspacios } from "../hooks/useEspacios.js";
+import CustomError from "../errors/CustomError.js";
 
 export function EventCard({ ref, evento, reset }) {
   const { cargarEspacios, setEventoSeleccionado } = useEspacios();
-  const { usuario } = useAuth();
-  const dialogRef = useRef(null)
+  const { usuario, logout } = useAuth();
+  const dialogRef = useRef(null);
 
   const eventStatusClasses = evento.cancelado
     ? "bg--terciary-600 clr--terciary-300"
@@ -28,15 +29,20 @@ export function EventCard({ ref, evento, reset }) {
 
   const eventCategoryClasses = estiloCategoria[evento.categoria];
 
-  const openDialog =  () => {
+  const openDialog = () => {
     dialogRef.current?.showModal();
-  }
+  };
 
   const openDialogEditEvent = async () => {
     setEventoSeleccionado(evento);
-    await cargarEspacios();
-    ref.current?.showModal();
-  }
+    try {
+      await cargarEspacios();
+      ref.current?.showModal();
+    } catch (error) {
+      if(error instanceof CustomError && error.codigoEstado === 401)
+        logout();
+    }
+  };
 
   return (
     <div className="card__event rounded-4 p-4 overflow-hidden clr--neutral-100">
@@ -81,7 +87,7 @@ export function EventCard({ ref, evento, reset }) {
                       </>
                     ) : (
                       <>
-                        <ActiveEventIcon width={20} height={20}/>
+                        <ActiveEventIcon width={20} height={20} />
                         <span>Activar evento</span>
                       </>
                     )}
@@ -133,7 +139,15 @@ export function EventCard({ ref, evento, reset }) {
           </div>
 
           <div className="event__field d-flex align-items-center gap-3 mt-3">
-            <div className="rounded-3 p-3 w-100" style={{minHeight: "100px", maxHeight: "100px", overflowY: "scroll", border: "1px solid var(--clr-secondary-400)"}}>
+            <div
+              className="rounded-3 p-3 w-100"
+              style={{
+                minHeight: "100px",
+                maxHeight: "100px",
+                overflowY: "scroll",
+                border: "1px solid var(--clr-secondary-400)",
+              }}
+            >
               {evento.descripcion}
             </div>
           </div>
@@ -141,7 +155,12 @@ export function EventCard({ ref, evento, reset }) {
       </div>
 
       {/* DIALOGO DE CONFIRMACION */}
-      <ConfirmDialogEvent id={evento.id} cancelado={evento.cancelado} ref={dialogRef} reset={reset}/>
+      <ConfirmDialogEvent
+        id={evento.id}
+        cancelado={evento.cancelado}
+        ref={dialogRef}
+        reset={reset}
+      />
     </div>
   );
 }

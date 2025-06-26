@@ -1,44 +1,49 @@
 import { DialogCancelEventIcon } from "../assets/icons/DialogIcons/DialogCancelEvent.jsx";
 import { DialogErrorIcon } from "../assets/icons/DialogIcons/DialogError.jsx";
 import { DialogInfoIcon } from "../assets/icons/DialogIcons/DialogInfo.jsx";
+import CustomError from "../errors/CustomError.js";
+import { useAuth } from "../hooks/useAuth.js";
 import { useNotification } from "../hooks/useNotification.js";
 import { checkAuth } from "../services/check-auth.js";
 import "../styles/confirm_dialog_event.css";
 
 const fetchEliminarEspacio = (id) => {
-  return () => 
+  return () =>
     fetch(`api/v1/espacio/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
 };
 
-export function ConfirmDialogEspacio({ id,ref,reset}) {
-
+export function ConfirmDialogEspacio({ id, ref, reset }) {
+  const { logout } = useAuth();
   const { notificar } = useNotification();
   const closeDialog = () => ref.current?.close();
 
-  const handleClick=async()=>{
-    let texto="";
-    let dialogIcon=null;
-    try{
+  const handleClick = async () => {
+    let texto = "";
+    let dialogIcon = null;
+    try {
       const res = await checkAuth(fetchEliminarEspacio(id));
-      if(!res.ok){
-        const data= await res.json();
+      if (!res.ok) {
+        const data = await res.json();
         throw new Error(data.mensaje_error || "No se pudo eliminar el espacio");
       }
-      texto="Espacio eliminado correctamente";
-      dialogIcon = () => DialogInfoIcon;
+      texto = "Espacio eliminado correctamente";
       reset();
+      notificar(texto, true, () => DialogInfoIcon)
     } catch (error) {
-      texto = error.message
-      dialogIcon = () => DialogErrorIcon;
+      if (error instanceof CustomError && error.codigoEstado === 401) logout();
+      else {
+        texto = error.message;
+        dialogIcon = () => DialogErrorIcon;
+        notificar(texto, true, () => DialogErrorIcon)
+      }
     } finally {
       closeDialog();
-      notificar(texto, true, dialogIcon);
     }
   };
-  return(
+  return (
     <dialog
       ref={ref}
       id="confirmDialogEspacio"
@@ -48,16 +53,16 @@ export function ConfirmDialogEspacio({ id,ref,reset}) {
         <DialogCancelEventIcon width={76} height={76} />
         <h1 className="fs--dialog-title fw--semibold">Eliminar espacio </h1>
         <p className="fs--dialog-text clr--neutral-300">
-            Estas seguro de querer eliminar este espacio físico?
+          Estas seguro de querer eliminar este espacio físico?
         </p>
-        </div>
-        <div className="dEvent__buttons d-flex flex-column align-items-center justify-content-center gap-2">
-        <button 
-        className="cancelar w-100 border-0 py-2 text-center rounded-3 fs--dialog-text" 
-        type="button" 
-        onClick={handleClick}
+      </div>
+      <div className="dEvent__buttons d-flex flex-column align-items-center justify-content-center gap-2">
+        <button
+          className="cancelar w-100 border-0 py-2 text-center rounded-3 fs--dialog-text"
+          type="button"
+          onClick={handleClick}
         >
-        Eliminar
+          Eliminar
         </button>
         <button
           className="w-100 border-0 py-2 text-center rounded-3 fs--dialog-text"
@@ -66,8 +71,7 @@ export function ConfirmDialogEspacio({ id,ref,reset}) {
         >
           Cancelar
         </button>
-        </div>
-
+      </div>
     </dialog>
   );
 }

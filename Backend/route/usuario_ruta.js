@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/register', checkCampos(['nombre', 'apellidos', 'email', 'password'], ['nombre', 'apellidos', 'email', 'password']), registrar);
 router.post('/login', checkCampos(['email', 'password'], ['email', 'password']), login);
-router.post('/logout', checkToken(), logout);
+router.post('/logout', logout);
 
 router.post('/check-auth', checkToken(), (req, res) => {
     const usuario = req.session.usuario;

@@ -9,6 +9,8 @@ import { DialogInfoIcon } from "../assets/icons/DialogIcons/DialogInfo.jsx";
 import { useNotification } from "../hooks/useNotification.js";
 import { DialogErrorIcon } from "../assets/icons/DialogIcons/DialogError.jsx";
 import { formatearFechaParaInput } from "../utils/formatearFecha.js";
+import CustomError from "../errors/CustomError.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 const crearEventoCallback = (evento, ruta, metodo) => {
   return () => {
@@ -24,6 +26,7 @@ const crearEventoCallback = (evento, ruta, metodo) => {
 };
 
 export function CreateEventDialog({ ref, reset }) {
+  const { logout } = useAuth();
   const { notificar } = useNotification();
   const { espacios, eventoSeleccionado, setEventoSeleccionado } = useEspacios();
   const [edicion, setEdicion] = useState(false);
@@ -161,7 +164,10 @@ export function CreateEventDialog({ ref, reset }) {
       notificar(`Evento ${texto} con éxito`, true, () => DialogInfoIcon);
     } catch (error) {
       closeDialog();
-      notificar(error.message, true, () => DialogErrorIcon);
+      if(error instanceof CustomError && error.codigoEstado === 401)
+        logout();
+      else
+        notificar(error.message, true, () => DialogErrorIcon);
     }
   };
 

@@ -3,6 +3,8 @@ import { DialogActiveEventIcon } from "../assets/icons/DialogIcons/DialogActiveE
 import { DialogCancelEventIcon } from "../assets/icons/DialogIcons/DialogCancelEvent";
 import { DialogErrorIcon } from "../assets/icons/DialogIcons/DialogError.jsx";
 import { DialogInfoIcon } from "../assets/icons/DialogIcons/DialogInfo.jsx";
+import CustomError from "../errors/CustomError.js";
+import { useAuth } from "../hooks/useAuth.js";
 import { useNotification } from "../hooks/useNotification.js";
 import { checkAuth } from "../services/check-auth.js";
 import "../styles/confirm_dialog_event.css";
@@ -23,7 +25,7 @@ const fetchEventState = (id, cancelado) => {
 };
 
 export function ConfirmDialogEvent({ id, cancelado, ref, reset }) {
-
+  const { logout } = useAuth();
   const { notificar } = useNotification();
 
   const textState = cancelado ? "Activar" : "Suspender";
@@ -44,16 +46,20 @@ export function ConfirmDialogEvent({ id, cancelado, ref, reset }) {
       }
 
       texto = cancelado ? 'Evento activado' : 'Evento suspendido';
-      dialogIcon = () => DialogInfoIcon;
       
       console.log("RESET")
       reset();
+      notificar(texto, true, () => DialogInfoIcon)
     } catch (error) {
-      texto = error.message
-      dialogIcon = () => DialogErrorIcon;
+      if(error instanceof CustomError && error.codigoEstado === 401)
+        logout();
+      else {
+        texto = error.message
+        notificar(texto, true, () => DialogErrorIcon)
+      }
+      
     } finally {
       ref.current?.close();
-      notificar(texto, true, dialogIcon);
     }
   };
 

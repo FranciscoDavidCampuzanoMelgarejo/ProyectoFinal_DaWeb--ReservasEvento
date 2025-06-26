@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { checkAuth } from "../services/check-auth";
+import CustomError from "../errors/CustomError";
 
 const espaciosCallback = () => {
   return fetch("/api/v1/espacio", {
@@ -24,6 +25,7 @@ export function EspaciosProvider({ children }) {
       setEspacios(data.filter(e => e.estado === 1)); // Obtener espacios no cerrados
     } catch (error) {
       console.log(error);
+      throw error;
     }
   };
 

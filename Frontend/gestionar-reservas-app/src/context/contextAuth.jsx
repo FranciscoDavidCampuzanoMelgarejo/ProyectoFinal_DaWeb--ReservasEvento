@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { checkAuth } from "../services/check-auth";
 
 // 1. Crear el contexto
@@ -20,6 +21,7 @@ const logoutCallback = () => {
 
 // 2. Proveer el contexto
 export function AuthProvider({ children }) {
+  const navigate = useNavigate();
   const [cargando, setCargando] = useState(true);
   const [usuario, setUsuario] = useState(() => {
     const usuarioLogueado = localStorage.getItem("usuario");
@@ -51,7 +53,10 @@ export function AuthProvider({ children }) {
     checkAuth(logoutCallback)
       .then(reponseFetch => console.log("Sesion cerrada"))
       .catch(error => console.log("error"))
-      .finally(() => localStorage.removeItem('usuario'));
+      .finally(() => {
+        localStorage.removeItem('usuario');
+        navigate("/");
+      });
   };
 
   useEffect(() => {

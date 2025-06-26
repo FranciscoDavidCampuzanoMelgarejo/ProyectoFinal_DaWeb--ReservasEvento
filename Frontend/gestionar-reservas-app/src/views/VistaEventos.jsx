@@ -10,6 +10,7 @@ import { CreateEventDialog } from "../components/CreateEventDialog.jsx";
 import { useEspacios } from "../hooks/useEspacios.js";
 import { useAuth } from "../hooks/useAuth.js";
 import { FiltrosDialog } from "../components/FiltrosDialog.jsx";
+import CustomError from "../errors/CustomError.js";
 
 const getEvents = () => {
   return fetch("/api/v1/evento", {
@@ -19,7 +20,7 @@ const getEvents = () => {
 };
 
 export function VistaEventos() {
-  const { usuario } = useAuth();
+  const { usuario, logout } = useAuth();
   const { cargarEspacios } = useEspacios();
 
   const [eventosOriginales, setEventosOriginales] = useState([]);
@@ -36,6 +37,10 @@ export function VistaEventos() {
         setEventosOriginales(data.eventos);
         setEventos(data.eventos);
         setFiltros({}); // Reseteamos filtros también al cargar eventos
+      })
+      .catch((error) => {
+        if (error instanceof CustomError && error.codigoEstado === 401)
+          logout();
       });
   };
 
@@ -70,13 +75,21 @@ export function VistaEventos() {
   }, [filtros]);
 
   const openDialog = async () => {
-    await cargarEspacios();
-    dialogoRef.current?.showModal();
+    try {
+      await cargarEspacios();
+      dialogoRef.current?.showModal();
+    } catch (error) {
+      if (error instanceof CustomError && error.codigoEstado === 401) logout();
+    }
   };
 
   const openFiltrosDialog = async () => {
-    await cargarEspacios();
-    dialogoFiltrosRef.current?.showModal();
+    try {
+      await cargarEspacios();
+      dialogoFiltrosRef.current?.showModal();
+    } catch (error) {
+      if (error instanceof CustomError && error.codigoEstado === 401) logout();
+    }
   };
 
   const actualizarFiltros = (nuevosFiltros) => {

@@ -6,6 +6,7 @@ import { useNotification } from '../hooks/useNotification.js';
 import { NotificationDialog } from '../components/NotificationDialog.jsx';
 import { DialogErrorIcon } from '../assets/icons/DialogIcons/DialogError.jsx';
 import { DialogInfoIcon } from '../assets/icons/DialogIcons/DialogInfo.jsx';
+import CustomError from '../errors/CustomError.js';
 
 const getTodasLasReservas=()=>{
     return fetch("/api/v1/reserva/admin",{
@@ -15,7 +16,7 @@ const getTodasLasReservas=()=>{
 };
 
 export function VistaReservasAdmin(){
-    const { usuario }= useAuth();
+    const { usuario, logout }= useAuth();
     const [reservas, setReservas]= useState([]);
     const { notificar } = useNotification();
     const cargarReservas=()=>{
@@ -24,7 +25,9 @@ export function VistaReservasAdmin(){
         .then((data)=>{
             setReservas(data.reservas || []);
         }).catch((err)=>{
-            console.error('Error al cargar reservas:', error);
+            console.error('Error al cargar reservas:', err);
+            if(err instanceof CustomError && err.codigoEstado === 401)
+                logout();
         });
     };
     useEffect(()=>{
@@ -48,7 +51,10 @@ export function VistaReservasAdmin(){
             }
         }catch(err){
             console.error("Error al anular reserva:", err);
-            notificar("Error al anular reserva", true, ()=> DialogErrorIcon);
+            if(err instanceof CustomError && err.codigoEstado === 401)
+                logout();
+            else
+                notificar("Error al anular reserva", true, ()=> DialogErrorIcon);
         }
     };
     
